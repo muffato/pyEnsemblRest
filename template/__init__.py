@@ -9,13 +9,10 @@ EnsemblRestServer and EnsemblGenomesRestServer are two instances of it, set up t
 import ensembl._pyrest_core
 from ensembl._pyrest_core import BaseObject
 
-import ensembl.genome
-import ensembl.info
-import ensembl.compara
+#__MODULE_IMPORTS__
 
 import ensembl._pyrest_server
 from ensembl._pyrest_server import RestServer, EnsemblRestServer, EnsemblGenomesRestServer
 
 __all__ = ['EnsemblRestServer', 'EnsemblGenomesRestServer', 'RestServer']
-
 

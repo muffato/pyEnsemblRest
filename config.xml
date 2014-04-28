@@ -1,0 +1,63 @@
+<pyrest>
+	<objects>
+		<namespace name="genome" >
+			<object name="Identifier" />
+			<object name="Sequence" />
+		</namespace>
+		<namespace name="info" >
+			<object name="Assembly" />
+			<object name="SeqRegion" />
+			<object name="ArchiveEntry" />
+		</namespace>
+		<namespace name="compara" >
+			<object name="GeneTree" description="Global object for gene-trees" />
+			<object name="GeneTreeNode" description="Node in a gene-tree" />
+			<object name="GeneTreeNodeConfidence" description="The confidence tags attached to a given gene-tree node" />
+			<object name="GeneTreeMember" description="Used in gene-tree leaves to show the actual protein that was used to build the tree" />
+			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
+			<object name="NCBITaxon" description="A node in the NCBI taxonomy" />
+		</namespace>
+	</objects>
+	<object_links>
+		<link src="info.Assembly" key="top_level_region" target="info.SeqRegion" />
+		<link src="compara.GeneTree" key="tree" target="compara.GeneTreeNode" />
+		<link src="compara.GeneTreeNode" key="taxonomy" target="compara.NCBITaxon" />
+		<link src="compara.GeneTreeNode" key="events" target="compara.GeneTreeEvent" />
+		<link src="compara.GeneTreeNode" key="confidence" target="compara.GeneTreeNodeConfidence" />
+		<link src="compara.GeneTreeNode" key="children" target="compara.GeneTreeNode" />
+		<link src="compara.GeneTreeNode" key="sequence" target="compara.GeneTreeMember" />
+		<link src="compara.GeneTreeNode" key="id" target="genome.Identifier" />
+		<link src="compara.GeneTreeMember" key="id" target="genome.Identifier" />
+		<link src="compara.GeneTreeMember" key="mol_seq" target="genome.Sequence" />
+	</object_links>
+	<endpoints>
+		<endpoint id="genetree" name="getGeneTreeById" object="compara.GeneTree" />
+		<endpoint id="genetree_member_id" name="getGeneTreeByMemberId" object="compara.GeneTree" />
+		<endpoint id="genetree_member_symbol" name="getGeneTreeByMemberSymbol" object="compara.GeneTree" />
+		<endpoint id="archive_id" name="getArchiveEntry" object="info.ArchiveEntry" />
+		<endpoint id="assembly_info" name="getAssemblyInfo" object="info.Assembly" />
+		<endpoint id="assembly_stats" name="getAssemblyInfoRegion" object="info.SeqRegion" />
+	</endpoints>
+	<content_types>
+		<content_type alias="bed" mime="text/x-bed" />
+		<content_type alias="fasta" mime="text/x-fasta" />
+		<content_type alias="gff3" mime="text/x-gff3" />
+		<content_type alias="json" mime="application/json" />
+		<content_type alias="nh" mime="text/x-nh" />
+		<content_type alias="phyloxml" mime="text/x-phyloxml+xml" />
+		<content_type alias="xml" mime="text/x-phyloxml+xml" />
+		<content_type alias="yaml" mime="text/x-yaml" />
+		<content_type alias="text" mime="text/plain" />
+	</content_types>
+	<rate_limiters>
+		<rate_limiter period='1' max_requests='6' />
+		<rate_limiter period='3600' max_requests='11100' />
+	</rate_limiters>
+	<response_codes>
+		<response_code code="200" title="OK" description="Request was a success" />
+		<response_code code="400" title="Bad Request" description="Occurs during exceptional circumstances such as the service is unable to find an ID" />
+		<response_code code="404" title="Not Found" description="Indicates a badly formatted request. Check your URL" />
+		<response_code code="429" title="Too Many Requests" description="You have been rate-limited; wait and retry" />
+		<response_code code="503" title="Service Unavailable" description="The service is temporarily down; retry after a pause" />
+	</response_codes>
+</pyrest>
