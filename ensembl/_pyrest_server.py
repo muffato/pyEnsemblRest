@@ -103,12 +103,12 @@ Required parameters:
 	Ensembl GeneTree ID
 
 Optional parameters:
-- sequence (Enum(none, cdna, protein))
-	The type of sequence to bring back. Setting it to none results in no sequence being returned
 - compara (String)
 	The name of the compara database to use. Multiple comparas can exist on a server if you are accessing Ensembl Genomes data. By default we search all available comparas for the given identifier
 - aligned (Boolean)
 	Alter if the sequence returned by this endpoint shows the aligned string with insertions where applicable
+- sequence (Enum(none, cdna, protein))
+	The type of sequence to bring back. Setting it to none results in no sequence being returned
 - nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
 	The format of a NH (New Hampshire) request.
 """
@@ -127,10 +127,10 @@ Required parameters:
 	Ensembl Gene ID
 
 Optional parameters:
-- db_type (String)
-	Registry group which we should limit our search to. Useful if a stable ID is not unique to a species
 - species (String)
 	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
+- db_type (String)
+	Registry group which we should limit our search to. Useful if a stable ID is not unique to a species
 - object_type (String)
 	Object type to restrict searches to. Used when a stable ID is not unique to a single class. This is equivalent to the Perl API object classes
 """
@@ -151,10 +151,10 @@ Required parameters:
 	Symbol or display name of a gene
 
 Optional parameters:
-- external_db (String)
-	Limit your symbol search to just this database
 - db_type (String)
 	Force the database to search for symbols in. Useful if you need to use a DB other than core
+- external_db (String)
+	Limit your symbol search to just this database
 - object_type (String)
 	Object type to restrict searches to. This is equivalent to the Perl API object classes
 """
@@ -172,7 +172,6 @@ Required parameters:
 - id (String)
 	The stable identifier of the entity you wish to retrieve overlapping features
 
-Optional parameters:
 """
 		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], 'archive/id/{0}'.format(id), kwargs)
 

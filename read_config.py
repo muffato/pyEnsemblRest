@@ -73,55 +73,63 @@ def decode_config(t, mul=[]):
 	return d
 
 
-template_endpoint = """
-	def {1}(self, {2}, **kwargs):
-		\"\"\"{0}\"\"\"
-		return self.build_rest_answer({4}, {5}, '{3}'.format({2}), kwargs)
-"""
+template_endpoint = '''
+	def {0}(self, {1}, **kwargs):
+		"""{3}
 
+Return type: {4}
+Valid formats: {6}
+HTTP endpoint: {7}
 
+{8}
+{9}"""
+		return self.build_rest_answer({4}, {5}, '{2}'.format({1}), kwargs)
+'''
 
-endpoint_code = []
-for e in config_root.find('endpoints'):
+def parameter_docstring(param_name, parameter_details):
+	return "- %s (%s)\n\t%s\n" % (param_name, parameter_details['type'], parameter_details['description'])
+
+def allparams_docstring(title, allparams, parameter_details):
+	if len(allparams) == 0:
+		return ''
+	return ('%s:\n' % title) + "".join(parameter_docstring(p, parameter_details[p]) for p in allparams)
+
+def get_code_for_endpoint(e):
 
 	re = endpoints[e.get('id')]
 	d = decode_config(re.text, ['output'])
-
-	parameters = dict((p.tag, decode_config(p.text)) for p in re.find('params'))
 	d['endpoint'] = d['endpoint'].replace('"', '')
 
+	ordered_parameters = [(p.tag,decode_config(p.text)) for p in re.find('params')]
+	parameter_details = dict(ordered_parameters)
 
-	doc_params = '\n\nRequired parameters:\n'
-	endpoint_args = []
+	endpoint_url_segments = []
 	required_params = []
-	for x in d['endpoint'].split('/'):
-		if x.startswith(':'):
-			endpoint_args.append('{%d}' % len(required_params))
-			p = x[1:]
-			dp = parameters[p]
-			doc_params = doc_params + "- %s (%s)\n\t%s\n" % (p, dp['type'], dp['description'])
+	for url_segment in d['endpoint'].split('/'):
+		if url_segment.startswith(':'):
+			endpoint_url_segments.append('{%d}' % len(required_params))
+			p = url_segment[1:]
+			dp = parameter_details[p]
 			required_params.append(p)
+			if dp.get('required') != '1':
+				print("'required' should be set to 1 for '%s' in '%s'" % (p, d['endpoint']), file=sys.stderr)
 		else:
-			endpoint_args.append(x)
+			endpoint_url_segments.append(url_segment)
 
-	doc_params = doc_params + '\nOptional parameters:\n'
-	for (p,dp) in parameters.items():
-		if p in required_params:
-			continue
-		if 'deprecated' in dp:
-			continue
-		doc_params = doc_params + "- %s (%s)\n\t%s\n" % (p, dp['type'], dp['description'])
+	optional_params = [p for (p,dp) in ordered_parameters if (p not in required_params) and ('deprecated' not in dp)]
 
-	doc = [
-		d['description'] + "\n",
-		('Return type', 'ensembl.' + e.get('object')),
-		('Valid formats', ", ".join(d['output'])),
-		('HTTP endpoint', d['endpoint'])
-	]
-	doc_string = "\n".join("%s: %s" % x if isinstance(x, tuple) else x for x in doc) + doc_params
-	endpoint_code.append( template_endpoint.format(doc_string, e.get('name'), ", ".join(required_params), '/'.join(endpoint_args), "ensembl."+e.get('object'), d['output']) )
-
-replace_placeholder_in_template('_pyrest_server', '__ENDPOINTS_METHODS__', endpoint_code, sep="\n")
+	return template_endpoint.format(
+		e.get('name'),
+		", ".join(required_params),
+		'/'.join(endpoint_url_segments),
+		d['description'],
+		"ensembl." + e.get('object'),
+		d['output'],
+		", ".join(d['output']),
+		d['endpoint'],
+		allparams_docstring('Required parameters', required_params, parameter_details),
+		allparams_docstring('Optional parameters', optional_params, parameter_details)
+	)
 
 
 ## Read all the other configurations and update _pyrest_server
@@ -131,6 +139,9 @@ def build_and_replace(template_anchor, config_tag_name, expected_tag_name, callb
 		assert config_entry.tag == expected_tag_name
 		config_all_rate_limiters.append( callback(config_entry) )
 	replace_placeholder_in_template('_pyrest_server', template_anchor, config_all_rate_limiters, sep=sep)
+
+# endpoint accessors
+build_and_replace('__ENDPOINTS_METHODS__', 'endpoints', 'endpoint', get_code_for_endpoint, sep="\n")
 
 # construction_rules
 build_and_replace('__CONSTRUCTION_RULES__', 'object_links', 'link',
