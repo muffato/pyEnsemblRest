@@ -79,7 +79,6 @@ template_endpoint = """
 		return self.build_rest_answer({4}, {5}, '{3}'.format({2}), kwargs)
 """
 
-template_construction_rule = "ensembl._pyrest_core.construction_rules[(ensembl.%s,'%s')] = ensembl.%s"
 
 
 endpoint_code = []
@@ -126,34 +125,32 @@ replace_placeholder_in_template('_pyrest_server', '__ENDPOINTS_METHODS__', endpo
 
 
 ## Read all the other configurations and update _pyrest_server
+def build_and_replace(template_anchor, config_tag_name, expected_tag_name, callback, sep=",\n"):
+	config_all_rate_limiters = []
+	for config_entry in config_root.find(config_tag_name):
+		assert config_entry.tag == expected_tag_name
+		config_all_rate_limiters.append( callback(config_entry) )
+	replace_placeholder_in_template('_pyrest_server', template_anchor, config_all_rate_limiters, sep=sep)
 
 # construction_rules
-config_all_construction_rules = []
-for config_object_link in config_root.find('object_links'):
-	config_all_construction_rules.append( template_construction_rule % (config_object_link.get('src'), config_object_link.get('key'), config_object_link.get('target')) )
-replace_placeholder_in_template('_pyrest_server', '__CONSTRUCTION_RULES__', config_all_construction_rules, sep="\n")
+build_and_replace('__CONSTRUCTION_RULES__', 'object_links', 'link',
+		lambda c: "ensembl._pyrest_core.construction_rules[(ensembl.%s,'%s')] = ensembl.%s" % (c.get('src'), c.get('key'), c.get('target')), sep="\n"
+)
 
 # content_types
-config_all_content_types = []
-for config_content_type in config_root.find('content_types'):
-	assert config_content_type.tag == 'content_type'
-	config_all_content_types.append( '"%s": "%s"' % (config_content_type.get('alias'), config_content_type.get('mime')) )
-replace_placeholder_in_template('_pyrest_server', '__CONTENT_TYPES__', config_all_content_types, sep=",\n")
+build_and_replace('__CONTENT_TYPES__', 'content_types', 'content_type',
+		lambda c: '"%s": "%s"' % (c.get('alias'), c.get('mime'))
+)
 
 # response codes
-config_all_response_codes = []
-for config_response_code in config_root.find('response_codes'):
-	assert config_response_code.tag == 'response_code'
-	config_all_response_codes.append( '%s: ("%s", "%s")' % (config_response_code.get('code'), config_response_code.get('title'), config_response_code.get('description')) )
-replace_placeholder_in_template('_pyrest_server', '__RETURN_CODES__', config_all_response_codes, sep=",\n")
+build_and_replace('__RESPONSE_CODES__', 'response_codes', 'response_code',
+		lambda c: '%s: ("%s", "%s")' % (c.get('code'), c.get('title'), c.get('description'))
+)
 
 # rate limiters
-config_all_rate_limiters = []
-for config_rate_limiter in config_root.find('rate_limiters'):
-	assert config_rate_limiter.tag == 'rate_limiter'
-	config_all_rate_limiters.append( '%s: collections.deque([], %s-1)' % (config_rate_limiter.get('period'), config_rate_limiter.get('max_requests')) )
-replace_placeholder_in_template('_pyrest_server', '__RATE_LIMITERS__', config_all_rate_limiters, sep=",\n")
-
+build_and_replace('__RATE_LIMITERS__', 'rate_limiters', 'rate_limiter',
+		lambda c: '%s: collections.deque([], %s-1)' % (c.get('period'), c.get('max_requests'))
+)
 
 
 ## Write down all the files to the disk

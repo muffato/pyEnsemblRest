@@ -11,7 +11,7 @@ content_types = {
 }
 
 return_codes = {
-#__RETURN_CODES__
+#__RESPONSE_CODES__
 }
 
 class RestServer:
