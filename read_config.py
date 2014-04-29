@@ -124,7 +124,7 @@ for e in config_root.find('endpoints'):
 		d['description'] + "\n",
 		('Return type', 'ensembl.' + e.get('object')),
 		('Valid formats', ", ".join(d['output'])),
-		('HTTP endpoint:', d['endpoint'])
+		('HTTP endpoint', d['endpoint'])
 	]
 	doc_string = "\n".join("%s: %s" % x if isinstance(x, tuple) else x for x in doc) + doc_params
 	endpoint_code.append( template_endpoint.format(doc_string, e.get('name'), ", ".join(required_params), '/'.join(endpoint_args), "ensembl."+e.get('object'), d['output']) )

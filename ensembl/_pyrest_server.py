@@ -96,7 +96,7 @@ class RestServer:
 
 Return type: ensembl.compara.GeneTree
 Valid formats: xml, phyloxml, nh, json
-HTTP endpoint:: genetree/id/:stable_id
+HTTP endpoint: genetree/id/:stable_id
 
 Required parameters:
 - stable_id (String)
@@ -120,7 +120,7 @@ Optional parameters:
 
 Return type: ensembl.compara.GeneTree
 Valid formats: xml, phyloxml, nh
-HTTP endpoint:: genetree/member/id/:stable_id
+HTTP endpoint: genetree/member/id/:stable_id
 
 Required parameters:
 - stable_id (String)
@@ -142,7 +142,7 @@ Optional parameters:
 
 Return type: ensembl.compara.GeneTree
 Valid formats: xml, phyloxml, nh
-HTTP endpoint:: genetree/member/symbol/:species/:symbol
+HTTP endpoint: genetree/member/symbol/:species/:symbol
 
 Required parameters:
 - species (String)
@@ -166,7 +166,7 @@ Optional parameters:
 
 Return type: ensembl.info.ArchiveEntry
 Valid formats: json, xml
-HTTP endpoint:: archive/id/:stable_id
+HTTP endpoint: archive/id/:stable_id
 
 Required parameters:
 - stable_id (String)
@@ -182,7 +182,7 @@ Optional parameters:
 
 Return type: ensembl.info.Assembly
 Valid formats: json, xml
-HTTP endpoint:: assembly/info/:species
+HTTP endpoint: assembly/info/:species
 
 Required parameters:
 - species (String)
@@ -200,7 +200,7 @@ Optional parameters:
 
 Return type: ensembl.info.SeqRegion
 Valid formats: json, xml
-HTTP endpoint:: assembly/info/:species/:region_name
+HTTP endpoint: assembly/info/:species/:region_name
 
 Required parameters:
 - species (String)
