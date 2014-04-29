@@ -57,17 +57,14 @@ class RestServer:
 		return content.decode('utf-8')
 
 
-	def build_rest_answer(self, new_object, url, kwargs={}):
+	def build_rest_answer(self, new_object, allowed_formats, url, kwargs={}):
 
-		format = None
-		if 'format' in kwargs:
-			format = kwargs['format']
-			if format is not None:
-				format = format.lower()
-				if format not in content_types:
-					#print "unrecognzied format", format
-					format = None
-			del kwargs['format']
+		format = kwargs.pop('format', None)
+		if format is not None:
+			format = format.lower()
+			if format not in allowed_formats:
+				#print "unrecognzied format", format
+				format = None
 
 		if len(kwargs):
 			url = url + "?" + "&".join("%s=%s" % _ for _ in kwargs.items())

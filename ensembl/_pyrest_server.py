@@ -70,17 +70,14 @@ class RestServer:
 		return content.decode('utf-8')
 
 
-	def build_rest_answer(self, new_object, url, kwargs={}):
+	def build_rest_answer(self, new_object, allowed_formats, url, kwargs={}):
 
-		format = None
-		if 'format' in kwargs:
-			format = kwargs['format']
-			if format is not None:
-				format = format.lower()
-				if format not in content_types:
-					#print "unrecognzied format", format
-					format = None
-			del kwargs['format']
+		format = kwargs.pop('format', None)
+		if format is not None:
+			format = format.lower()
+			if format not in allowed_formats:
+				#print "unrecognzied format", format
+				format = None
 
 		if len(kwargs):
 			url = url + "?" + "&".join("%s=%s" % _ for _ in kwargs.items())
@@ -106,16 +103,16 @@ Required parameters:
 	Ensembl GeneTree ID
 
 Optional parameters:
-- nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
-	The format of a NH (New Hampshire) request.
 - sequence (Enum(none, cdna, protein))
 	The type of sequence to bring back. Setting it to none results in no sequence being returned
 - compara (String)
 	The name of the compara database to use. Multiple comparas can exist on a server if you are accessing Ensembl Genomes data. By default we search all available comparas for the given identifier
 - aligned (Boolean)
 	Alter if the sequence returned by this endpoint shows the aligned string with insertions where applicable
+- nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
+	The format of a NH (New Hampshire) request.
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, 'genetree/id/{0}'.format(stable_id), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh', 'json'], 'genetree/id/{0}'.format(stable_id), kwargs)
 
 
 	def getGeneTreeByMemberId(self, stable_id, **kwargs):
@@ -130,14 +127,14 @@ Required parameters:
 	Ensembl Gene ID
 
 Optional parameters:
+- db_type (String)
+	Registry group which we should limit our search to. Useful if a stable ID is not unique to a species
 - species (String)
 	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
 - object_type (String)
 	Object type to restrict searches to. Used when a stable ID is not unique to a single class. This is equivalent to the Perl API object classes
-- db_type (String)
-	Registry group which we should limit our search to. Useful if a stable ID is not unique to a species
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, 'genetree/member/id/{0}'.format(stable_id), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], 'genetree/member/id/{0}'.format(stable_id), kwargs)
 
 
 	def getGeneTreeByMemberSymbol(self, species, symbol, **kwargs):
@@ -161,7 +158,7 @@ Optional parameters:
 - object_type (String)
 	Object type to restrict searches to. This is equivalent to the Perl API object classes
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, 'genetree/member/symbol/{0}/{1}'.format(species, symbol), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], 'genetree/member/symbol/{0}/{1}'.format(species, symbol), kwargs)
 
 
 	def getArchiveEntry(self, stable_id, **kwargs):
@@ -177,7 +174,7 @@ Required parameters:
 
 Optional parameters:
 """
-		return self.build_rest_answer(ensembl.info.ArchiveEntry, 'archive/id/{0}'.format(stable_id), kwargs)
+		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], 'archive/id/{0}'.format(stable_id), kwargs)
 
 
 	def getAssemblyInfo(self, species, **kwargs):
@@ -195,7 +192,7 @@ Optional parameters:
 - bands (Boolean(0,1))
 	If set to 1, include karyotype band information. Only display if band information is available
 """
-		return self.build_rest_answer(ensembl.info.Assembly, 'assembly/info/{0}'.format(species), kwargs)
+		return self.build_rest_answer(ensembl.info.Assembly, ['json', 'xml'], 'assembly/info/{0}'.format(species), kwargs)
 
 
 	def getAssemblyInfoRegion(self, species, region_name, **kwargs):
@@ -215,7 +212,7 @@ Optional parameters:
 - bands (Boolean(0,1))
 	If set to 1, include karyotype band information. Only display if band information is available
 """
-		return self.build_rest_answer(ensembl.info.SeqRegion, 'assembly/info/{0}/{1}'.format(species, region_name), kwargs)
+		return self.build_rest_answer(ensembl.info.SeqRegion, ['json', 'xml'], 'assembly/info/{0}/{1}'.format(species, region_name), kwargs)
 
 
 

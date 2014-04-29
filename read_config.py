@@ -76,7 +76,7 @@ def decode_config(t, mul=[]):
 template_endpoint = """
 	def {1}(self, {2}, **kwargs):
 		\"\"\"{0}\"\"\"
-		return self.build_rest_answer({4}, '{3}'.format({2}), kwargs)
+		return self.build_rest_answer({4}, {5}, '{3}'.format({2}), kwargs)
 """
 
 template_construction_rule = "ensembl._pyrest_core.construction_rules[(ensembl.%s,'%s')] = ensembl.%s"
@@ -127,7 +127,7 @@ for e in config_root.find('endpoints'):
 		('HTTP endpoint:', d['endpoint'])
 	]
 	doc_string = "\n".join("%s: %s" % x if isinstance(x, tuple) else x for x in doc) + doc_params
-	endpoint_code.append( template_endpoint.format(doc_string, e.get('name'), ", ".join(required_params), '/'.join(endpoint_args), "ensembl."+e.get('object')) )
+	endpoint_code.append( template_endpoint.format(doc_string, e.get('name'), ", ".join(required_params), '/'.join(endpoint_args), "ensembl."+e.get('object'), d['output']) )
 
 replace_placeholder_in_template('_pyrest_server', '__ENDPOINTS_METHODS__', endpoint_code, sep="\n")
 
