@@ -89,13 +89,6 @@ for e in config_root.find('endpoints'):
 	d = decode_config(re.text, ['output'])
 
 	parameters = dict((p.tag, decode_config(p.text)) for p in re.find('params'))
-	if 'id' in parameters:
-		if 'stable_id' in parameters:
-			print("both stable_id and id are parameters of %s" % d['endpoint'])
-			sys.exit(1)
-		parameters['stable_id'] = parameters['id']
-		del parameters['id']
-		d['endpoint'] = d['endpoint'].replace(':id', ':stable_id')
 	d['endpoint'] = d['endpoint'].replace('"', '')
 
 

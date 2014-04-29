@@ -91,15 +91,15 @@ class RestServer:
 		return new_object(json.loads(content))
 
 
-	def getGeneTreeById(self, stable_id, **kwargs):
+	def getGeneTreeById(self, id, **kwargs):
 		"""Retrieves Gene Tree dumps for a given Gene Tree stable identifier
 
 Return type: ensembl.compara.GeneTree
 Valid formats: xml, phyloxml, nh, json
-HTTP endpoint: genetree/id/:stable_id
+HTTP endpoint: genetree/id/:id
 
 Required parameters:
-- stable_id (String)
+- id (String)
 	Ensembl GeneTree ID
 
 Optional parameters:
@@ -112,18 +112,18 @@ Optional parameters:
 - nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
 	The format of a NH (New Hampshire) request.
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh', 'json'], 'genetree/id/{0}'.format(stable_id), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh', 'json'], 'genetree/id/{0}'.format(id), kwargs)
 
 
-	def getGeneTreeByMemberId(self, stable_id, **kwargs):
+	def getGeneTreeByMemberId(self, id, **kwargs):
 		"""Retrieves the Gene Tree that contains the given stable identifier
 
 Return type: ensembl.compara.GeneTree
 Valid formats: xml, phyloxml, nh
-HTTP endpoint: genetree/member/id/:stable_id
+HTTP endpoint: genetree/member/id/:id
 
 Required parameters:
-- stable_id (String)
+- id (String)
 	Ensembl Gene ID
 
 Optional parameters:
@@ -134,7 +134,7 @@ Optional parameters:
 - object_type (String)
 	Object type to restrict searches to. Used when a stable ID is not unique to a single class. This is equivalent to the Perl API object classes
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], 'genetree/member/id/{0}'.format(stable_id), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], 'genetree/member/id/{0}'.format(id), kwargs)
 
 
 	def getGeneTreeByMemberSymbol(self, species, symbol, **kwargs):
@@ -161,20 +161,20 @@ Optional parameters:
 		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], 'genetree/member/symbol/{0}/{1}'.format(species, symbol), kwargs)
 
 
-	def getArchiveEntry(self, stable_id, **kwargs):
+	def getArchiveEntry(self, id, **kwargs):
 		"""Uses the given identifier to return the archived sequence
 
 Return type: ensembl.info.ArchiveEntry
 Valid formats: json, xml
-HTTP endpoint: archive/id/:stable_id
+HTTP endpoint: archive/id/:id
 
 Required parameters:
-- stable_id (String)
+- id (String)
 	The stable identifier of the entity you wish to retrieve overlapping features
 
 Optional parameters:
 """
-		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], 'archive/id/{0}'.format(stable_id), kwargs)
+		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], 'archive/id/{0}'.format(id), kwargs)
 
 
 	def getAssemblyInfo(self, species, **kwargs):
