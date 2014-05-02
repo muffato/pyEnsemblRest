@@ -75,7 +75,8 @@ class RestServer:
 		if format is not None:
 			return content
 
-		return new_object(json.loads(content))
+		j = json.loads(content)
+		return ensembl.construct_object_from_json(j, new_object)
 
 #__ENDPOINTS_METHODS__
 
