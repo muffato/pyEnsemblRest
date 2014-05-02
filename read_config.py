@@ -83,7 +83,7 @@ HTTP endpoint: {7}
 
 {8}
 {9}"""
-		return self.build_rest_answer({4}, {5}, {10}, '{2}'.format({1}), kwargs)
+		return self.build_rest_answer({4}, {5}, {10}, {11}, '{2}'.format({1}), kwargs)
 '''
 
 template_endpoint_no_args = '''
@@ -96,7 +96,7 @@ HTTP endpoint: {7}
 
 {8}
 {9}"""
-		return self.build_rest_answer({4}, {5}, {10}, '{2}', kwargs)
+		return self.build_rest_answer({4}, {5}, {10}, {11}, '{2}', kwargs)
 '''
 
 
@@ -143,7 +143,8 @@ def get_code_for_endpoint(e):
 		d['endpoint'],
 		allparams_docstring('Required parameters', required_params, parameter_details),
 		allparams_docstring('Optional parameters', optional_params, parameter_details),
-		optional_params
+		optional_params,
+		None if e.get('accessor') is None else '"%s"' % e.get('accessor')
 	)
 
 

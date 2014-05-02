@@ -57,7 +57,7 @@ class RestServer:
 		return content.decode('utf-8')
 
 
-	def build_rest_answer(self, new_object, allowed_formats, optional_params, url, kwargs={}):
+	def build_rest_answer(self, new_object, allowed_formats, optional_params, accessor, url, kwargs={}):
 
 		format = kwargs.pop('format', None)
 		if format is not None:
@@ -76,6 +76,8 @@ class RestServer:
 			return content
 
 		j = json.loads(content)
+		if accessor is not None:
+			j = j[accessor]
 		return ensembl.construct_object_from_json(j, new_object)
 
 #__ENDPOINTS_METHODS__

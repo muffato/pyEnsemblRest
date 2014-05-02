@@ -70,7 +70,7 @@ class RestServer:
 		return content.decode('utf-8')
 
 
-	def build_rest_answer(self, new_object, allowed_formats, optional_params, url, kwargs={}):
+	def build_rest_answer(self, new_object, allowed_formats, optional_params, accessor, url, kwargs={}):
 
 		format = kwargs.pop('format', None)
 		if format is not None:
@@ -89,6 +89,8 @@ class RestServer:
 			return content
 
 		j = json.loads(content)
+		if accessor is not None:
+			j = j[accessor]
 		return ensembl.construct_object_from_json(j, new_object)
 
 
@@ -113,7 +115,7 @@ Optional parameters:
 - nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
 	The format of a NH (New Hampshire) request.
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh', 'json'], ['compara', 'aligned', 'sequence', 'nh_format'], 'genetree/id/{0}'.format(id), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh', 'json'], ['compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/id/{0}'.format(id), kwargs)
 
 
 	def getGeneTreeByMemberId(self, id, **kwargs):
@@ -135,7 +137,7 @@ Optional parameters:
 - object_type (String)
 	Object type to restrict searches to. Used when a stable ID is not unique to a single class. This is equivalent to the Perl API object classes
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], ['species', 'db_type', 'object_type'], 'genetree/member/id/{0}'.format(id), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], ['species', 'db_type', 'object_type'], None, 'genetree/member/id/{0}'.format(id), kwargs)
 
 
 	def getGeneTreeByMemberSymbol(self, species, symbol, **kwargs):
@@ -159,7 +161,7 @@ Optional parameters:
 - object_type (String)
 	Object type to restrict searches to. This is equivalent to the Perl API object classes
 """
-		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], ['db_type', 'external_db', 'object_type'], 'genetree/member/symbol/{0}/{1}'.format(species, symbol), kwargs)
+		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], ['db_type', 'external_db', 'object_type'], None, 'genetree/member/symbol/{0}/{1}'.format(species, symbol), kwargs)
 
 
 	def getArchiveEntry(self, id, **kwargs):
@@ -174,7 +176,7 @@ Required parameters:
 	The stable identifier of the entity you wish to retrieve overlapping features
 
 """
-		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], [], 'archive/id/{0}'.format(id), kwargs)
+		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], [], None, 'archive/id/{0}'.format(id), kwargs)
 
 
 	def getAssemblyInfo(self, species, **kwargs):
@@ -192,7 +194,7 @@ Optional parameters:
 - bands (Boolean(0,1))
 	If set to 1, include karyotype band information. Only display if band information is available
 """
-		return self.build_rest_answer(ensembl.info.Assembly, ['json', 'xml'], ['bands'], 'assembly/info/{0}'.format(species), kwargs)
+		return self.build_rest_answer(ensembl.info.Assembly, ['json', 'xml'], ['bands'], None, 'assembly/info/{0}'.format(species), kwargs)
 
 
 	def getAssemblyInfoRegion(self, species, region_name, **kwargs):
@@ -212,7 +214,7 @@ Optional parameters:
 - bands (Boolean(0,1))
 	If set to 1, include karyotype band information. Only display if band information is available
 """
-		return self.build_rest_answer(ensembl.info.SeqRegion, ['json', 'xml'], ['bands'], 'assembly/info/{0}/{1}'.format(species, region_name), kwargs)
+		return self.build_rest_answer(ensembl.info.SeqRegion, ['json', 'xml'], ['bands'], None, 'assembly/info/{0}/{1}'.format(species, region_name), kwargs)
 
 
 
