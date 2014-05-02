@@ -42,13 +42,15 @@ def test_Archive():
 	print(g)
 
 def test_others():
-	print(rs.ping())
-	print(rs.rest_version())
-	print(rs.ensembl_version())
-	print(rs.compara_databases())
-	print(rs.compara_methods())
-	print(rs.species_list()[0])
-	print(rs.getAnalysisList('chicken'))
+	print("ping", rs.ping())
+	print("rest_version", rs.rest_version())
+	print("ensembl_version", rs.ensembl_version())
+	print("compara_databases", rs.compara_databases())
+	print("compara_methods", rs.compara_methods())
+	print("1 species", rs.species_list()[0])
+	print("chicken logic_names", rs.getAnalysisList('chicken'))
+	print("MLSS", rs.getSpeciesSetByComparaMethod('EPO'))
+	print("releases", rs.available_releases())
 
 
 test_Archive()

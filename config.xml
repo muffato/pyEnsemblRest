@@ -9,6 +9,8 @@
 			<object name="SeqRegion" />
 			<object name="ArchiveEntry" />
 			<object name="Species" />
+			<object name="ExternalDatabase" />
+			<object name="Biotype" />
 		</namespace>
 		<namespace name="compara" >
 			<object name="GeneTree" description="Global object for gene-trees" />
@@ -17,6 +19,7 @@
 			<object name="GeneTreeMember" description="Used in gene-tree leaves to show the actual protein that was used to build the tree" />
 			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
 			<object name="NCBITaxon" description="A node in the NCBI taxonomy" />
+			<object name="MethodLinkSpeciesSet" />
 		</namespace>
 	</objects>
 	<object_links>
@@ -32,19 +35,26 @@
 		<link src="compara.GeneTreeMember" key="mol_seq" target="genome.Sequence" />
 	</object_links>
 	<endpoints>
+		<!-- Archive section -->
+		<endpoint id="archive_id" name="getArchiveEntry" object="info.ArchiveEntry" />
+		<!-- Comparative Genomics section -->
 		<endpoint id="genetree" name="getGeneTreeById" object="compara.GeneTree" />
 		<endpoint id="genetree_member_id" name="getGeneTreeByMemberId" object="compara.GeneTree" />
 		<endpoint id="genetree_member_symbol" name="getGeneTreeByMemberSymbol" object="compara.GeneTree" />
-		<endpoint id="archive_id" name="getArchiveEntry" object="info.ArchiveEntry" />
+		<!-- Information section -->
 		<endpoint id="assembly_info" name="getAssemblyInfo" object="info.Assembly" />
 		<endpoint id="assembly_stats" name="getAssemblyInfoRegion" object="info.SeqRegion" />
+		<endpoint id="analysis" name="getAnalysisList" />
+		<endpoint id="biotypes" name="getBiotypesBySpecies" object="info.Biotype" />
+		<endpoint id="compara_methods" name="compara_methods" />
+		<endpoint id="comparas" name="compara_databases" accessor="comparas" />
+		<endpoint id="compara_species_sets" name="getSpeciesSetByComparaMethod" object="compara.MethodLinkSpeciesSet" />
+		<endpoint id="data" name="available_releases" accessor="releases" />
+		<endpoint id="external_dbs" name="getExternalDatabasesBySpecies" object="info.ExternalDatabase" />
 		<endpoint id="ping" name="ping" accessor="ping" />
 		<endpoint id="rest" name="rest_version" accessor="release" />
 		<endpoint id="software" name="ensembl_version" accessor="release" />
 		<endpoint id="species" name="species_list" accessor="species" object="info.Species" />
-		<endpoint id="compara_methods" name="compara_methods" />
-		<endpoint id="comparas" name="compara_databases" accessor="comparas" />
-		<endpoint id="analysis" name="getAnalysisList" />
 	</endpoints>
 	<content_types>
 		<content_type alias="bed" mime="text/x-bed" />

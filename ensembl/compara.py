@@ -18,6 +18,9 @@ class GeneTreeEvent(ensembl.BaseObject):
 class NCBITaxon(ensembl.BaseObject):
 	"""A node in the NCBI taxonomy"""
 
+class MethodLinkSpeciesSet(ensembl.BaseObject):
+	""""""
+
 def _gtn_get_all_leaves(self):
 	"""
 		Get all the leaves under this node

@@ -94,6 +94,21 @@ class RestServer:
 		return ensembl.construct_object_from_json(j, new_object)
 
 
+	def getArchiveEntry(self, id, **kwargs):
+		"""Uses the given identifier to return the archived sequence
+
+Return type: ensembl.info.ArchiveEntry
+Valid formats: json, xml
+HTTP endpoint: archive/id/:id
+
+Required parameters:
+- id (String)
+	The stable identifier of the entity you wish to retrieve overlapping features
+
+"""
+		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], [], None, 'archive/id/{0}'.format(id), kwargs)
+
+
 	def getGeneTreeById(self, id, **kwargs):
 		"""Retrieves Gene Tree dumps for a given Gene Tree stable identifier
 
@@ -164,21 +179,6 @@ Optional parameters:
 		return self.build_rest_answer(ensembl.compara.GeneTree, ['xml', 'phyloxml', 'nh'], ['db_type', 'external_db', 'object_type'], None, 'genetree/member/symbol/{0}/{1}'.format(species, symbol), kwargs)
 
 
-	def getArchiveEntry(self, id, **kwargs):
-		"""Uses the given identifier to return the archived sequence
-
-Return type: ensembl.info.ArchiveEntry
-Valid formats: json, xml
-HTTP endpoint: archive/id/:id
-
-Required parameters:
-- id (String)
-	The stable identifier of the entity you wish to retrieve overlapping features
-
-"""
-		return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], [], None, 'archive/id/{0}'.format(id), kwargs)
-
-
 	def getAssemblyInfo(self, species, **kwargs):
 		"""Returns information about the current available assemblies in this given species
 
@@ -215,6 +215,113 @@ Optional parameters:
 	If set to 1, include karyotype band information. Only display if band information is available
 """
 		return self.build_rest_answer(ensembl.info.SeqRegion, ['json', 'xml'], ['bands'], None, 'assembly/info/{0}/{1}'.format(species, region_name), kwargs)
+
+
+	def getAnalysisList(self, species, **kwargs):
+		"""Lists the available analyses by logic name and the database type those logic names are found in.
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/analysis/:species
+
+Required parameters:
+- species (String)
+	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], None, 'info/analysis/{0}'.format(species), kwargs)
+
+
+	def getBiotypesBySpecies(self, species, **kwargs):
+		"""Lists all available biotypes for the given species. These can be used to limit gene and transcript retrieval.
+
+Return type: ensembl.info.Biotype
+Valid formats: json, xml
+HTTP endpoint: info/biotypes/:species
+
+Required parameters:
+- species (String)
+	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
+
+"""
+		return self.build_rest_answer(ensembl.info.Biotype, ['json', 'xml'], [], None, 'info/biotypes/{0}'.format(species), kwargs)
+
+
+	def compara_methods(self, **kwargs):
+		"""Returns the method types available for this compara database. Methods can be used in endpoints to specify the type of data comparative data required.
+
+Return type: None
+Valid formats: json, json, yaml, xml
+HTTP endpoint: info/compara/methods
+
+
+Optional parameters:
+- compara (String)
+	The name of the compara database to use. Multiple comparas can exist on a server if you are accessing Ensembl Genomes data
+- class (String)
+	Specify the class of method to query for. Regular expression patterns are supported
+"""
+		return self.build_rest_answer(None, ['json', 'json', 'yaml', 'xml'], ['compara', 'class'], None, 'info/compara/methods', kwargs)
+
+
+	def compara_databases(self, **kwargs):
+		"""Lists all available comparative genomics databases and their data release
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/comparas
+
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], "comparas", 'info/comparas', kwargs)
+
+
+	def getSpeciesSetByComparaMethod(self, method, **kwargs):
+		"""Returns the all the species sets linked to this method. If a species set is not named the species names will be made available as an additional array of unnamed species sets
+
+Return type: ensembl.compara.MethodLinkSpeciesSet
+Valid formats: json, yaml, xml
+HTTP endpoint: info/compara/species_sets/:method
+
+Required parameters:
+- method (String)
+	The compara method to search by. Use the methods returned by
+
+Optional parameters:
+- compara (String)
+	The name of the compara database to use. Multiple comparas can exist on a server if you are accessing Ensembl Genomes data
+"""
+		return self.build_rest_answer(ensembl.compara.MethodLinkSpeciesSet, ['json', 'yaml', 'xml'], ['compara'], None, 'info/compara/species_sets/{0}'.format(method), kwargs)
+
+
+	def available_releases(self, **kwargs):
+		"""Shows the data releases available on this REST server. Can return more than one release but this is rare (and non-standard Ensembl configuration)
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/data
+
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], "releases", 'info/data', kwargs)
+
+
+	def getExternalDatabasesBySpecies(self, species, **kwargs):
+		"""Lists the external database entries in the specified species. External dbs can be specified to restrict symbol lookups to a single or range of sources.
+
+Return type: ensembl.info.ExternalDatabase
+Valid formats: json, xml
+HTTP endpoint: info/external_dbs/:species
+
+Required parameters:
+- species (String)
+	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
+
+Optional parameters:
+- filter (String)
+	Pattern matching to restrict External DB searches to a single source or pattern. SQL LIKE patterns are supported.
+"""
+		return self.build_rest_answer(ensembl.info.ExternalDatabase, ['json', 'xml'], ['filter'], None, 'info/external_dbs/{0}'.format(species), kwargs)
 
 
 	def ping(self, **kwargs):
@@ -266,50 +373,6 @@ Optional parameters:
 	Specify a division of Ensembl or Ensembl Genomes to restrict data types by.
 """
 		return self.build_rest_answer(ensembl.info.Species, ['json', 'xml'], ['division'], "species", 'info/species', kwargs)
-
-
-	def compara_methods(self, **kwargs):
-		"""Returns the method types available for this compara database. Methods can be used in endpoints to specify the type of data comparative data required.
-
-Return type: None
-Valid formats: json, json, yaml, xml
-HTTP endpoint: info/compara/methods
-
-
-Optional parameters:
-- compara (String)
-	The name of the compara database to use. Multiple comparas can exist on a server if you are accessing Ensembl Genomes data
-- class (String)
-	Specify the class of method to query for. Regular expression patterns are supported
-"""
-		return self.build_rest_answer(None, ['json', 'json', 'yaml', 'xml'], ['compara', 'class'], None, 'info/compara/methods', kwargs)
-
-
-	def compara_databases(self, **kwargs):
-		"""Lists all available comparative genomics databases and their data release
-
-Return type: None
-Valid formats: json, xml
-HTTP endpoint: info/comparas
-
-
-"""
-		return self.build_rest_answer(None, ['json', 'xml'], [], "comparas", 'info/comparas', kwargs)
-
-
-	def getAnalysisList(self, species, **kwargs):
-		"""Lists the available analyses by logic name and the database type those logic names are found in.
-
-Return type: None
-Valid formats: json, xml
-HTTP endpoint: info/analysis/:species
-
-Required parameters:
-- species (String)
-	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
-
-"""
-		return self.build_rest_answer(None, ['json', 'xml'], [], None, 'info/analysis/{0}'.format(species), kwargs)
 
 
 

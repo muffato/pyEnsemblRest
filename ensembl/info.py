@@ -12,3 +12,9 @@ class ArchiveEntry(ensembl.BaseObject):
 class Species(ensembl.BaseObject):
 	""""""
 
+class ExternalDatabase(ensembl.BaseObject):
+	""""""
+
+class Biotype(ensembl.BaseObject):
+	""""""
+
