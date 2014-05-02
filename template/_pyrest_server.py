@@ -57,7 +57,7 @@ class RestServer:
 		return content.decode('utf-8')
 
 
-	def build_rest_answer(self, new_object, allowed_formats, url, kwargs={}):
+	def build_rest_answer(self, new_object, allowed_formats, optional_params, url, kwargs={}):
 
 		format = kwargs.pop('format', None)
 		if format is not None:
@@ -67,7 +67,7 @@ class RestServer:
 				format = None
 
 		if len(kwargs):
-			url = url + "?" + "&".join("%s=%s" % _ for _ in kwargs.items())
+			url = url + "?" + "&".join("%s=%s" % (p,kwargs[p]) for p in set(kwargs).intersection(optional_params))
 
 		content = self.get_json_answer(url, content_types.get(format, content_types['json']))
 

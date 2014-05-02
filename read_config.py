@@ -83,7 +83,7 @@ HTTP endpoint: {7}
 
 {8}
 {9}"""
-		return self.build_rest_answer({4}, {5}, '{2}'.format({1}), kwargs)
+		return self.build_rest_answer({4}, {5}, {10}, '{2}'.format({1}), kwargs)
 '''
 
 def parameter_docstring(param_name, parameter_details):
@@ -128,7 +128,8 @@ def get_code_for_endpoint(e):
 		", ".join(d['output']),
 		d['endpoint'],
 		allparams_docstring('Required parameters', required_params, parameter_details),
-		allparams_docstring('Optional parameters', optional_params, parameter_details)
+		allparams_docstring('Optional parameters', optional_params, parameter_details),
+		optional_params
 	)
 
 
