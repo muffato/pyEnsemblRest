@@ -217,6 +217,101 @@ Optional parameters:
 		return self.build_rest_answer(ensembl.info.SeqRegion, ['json', 'xml'], ['bands'], None, 'assembly/info/{0}/{1}'.format(species, region_name), kwargs)
 
 
+	def ping(self, **kwargs):
+		"""Pings the first available DBAdaptor to see if the service is still active
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/ping
+
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], "ping", 'info/ping', kwargs)
+
+
+	def rest_version(self, **kwargs):
+		"""Shows the current version of the REST API
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/rest
+
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], "release", 'info/rest', kwargs)
+
+
+	def ensembl_version(self, **kwargs):
+		"""Shows the current version of the Ensembl API
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/software
+
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], "release", 'info/software', kwargs)
+
+
+	def species_list(self, **kwargs):
+		"""Lists all available species, their aliases, available adaptor groups and data release
+
+Return type: ensembl.info.Species
+Valid formats: json, xml
+HTTP endpoint: info/species
+
+
+Optional parameters:
+- division (String)
+	Specify a division of Ensembl or Ensembl Genomes to restrict data types by.
+"""
+		return self.build_rest_answer(ensembl.info.Species, ['json', 'xml'], ['division'], "species", 'info/species', kwargs)
+
+
+	def compara_methods(self, **kwargs):
+		"""Returns the method types available for this compara database. Methods can be used in endpoints to specify the type of data comparative data required.
+
+Return type: None
+Valid formats: json, json, yaml, xml
+HTTP endpoint: info/compara/methods
+
+
+Optional parameters:
+- compara (String)
+	The name of the compara database to use. Multiple comparas can exist on a server if you are accessing Ensembl Genomes data
+- class (String)
+	Specify the class of method to query for. Regular expression patterns are supported
+"""
+		return self.build_rest_answer(None, ['json', 'json', 'yaml', 'xml'], ['compara', 'class'], None, 'info/compara/methods', kwargs)
+
+
+	def compara_databases(self, **kwargs):
+		"""Lists all available comparative genomics databases and their data release
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/comparas
+
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], "comparas", 'info/comparas', kwargs)
+
+
+	def getAnalysisList(self, species, **kwargs):
+		"""Lists the available analyses by logic name and the database type those logic names are found in.
+
+Return type: None
+Valid formats: json, xml
+HTTP endpoint: info/analysis/:species
+
+Required parameters:
+- species (String)
+	Registry name/aliases used to restrict searches by. Only required if a stable ID is not unique to a species (not the case with Ensembl databases)
+
+"""
+		return self.build_rest_answer(None, ['json', 'xml'], [], None, 'info/analysis/{0}'.format(species), kwargs)
+
+
 
 ensembl._pyrest_core.construction_rules[(ensembl.info.Assembly,'top_level_region')] = ensembl.info.SeqRegion
 ensembl._pyrest_core.construction_rules[(ensembl.compara.GeneTree,'tree')] = ensembl.compara.GeneTreeNode

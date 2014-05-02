@@ -8,6 +8,7 @@
 			<object name="Assembly" />
 			<object name="SeqRegion" />
 			<object name="ArchiveEntry" />
+			<object name="Species" />
 		</namespace>
 		<namespace name="compara" >
 			<object name="GeneTree" description="Global object for gene-trees" />
@@ -37,6 +38,13 @@
 		<endpoint id="archive_id" name="getArchiveEntry" object="info.ArchiveEntry" />
 		<endpoint id="assembly_info" name="getAssemblyInfo" object="info.Assembly" />
 		<endpoint id="assembly_stats" name="getAssemblyInfoRegion" object="info.SeqRegion" />
+		<endpoint id="ping" name="ping" accessor="ping" />
+		<endpoint id="rest" name="rest_version" accessor="release" />
+		<endpoint id="software" name="ensembl_version" accessor="release" />
+		<endpoint id="species" name="species_list" accessor="species" object="info.Species" />
+		<endpoint id="compara_methods" name="compara_methods" />
+		<endpoint id="comparas" name="compara_databases" accessor="comparas" />
+		<endpoint id="analysis" name="getAnalysisList" />
 	</endpoints>
 	<content_types>
 		<content_type alias="bed" mime="text/x-bed" />

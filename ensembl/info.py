@@ -9,3 +9,6 @@ class SeqRegion(ensembl.BaseObject):
 class ArchiveEntry(ensembl.BaseObject):
 	""""""
 
+class Species(ensembl.BaseObject):
+	""""""
+

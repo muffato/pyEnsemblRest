@@ -20,7 +20,7 @@ def test_GeneTree():
 	print(g.get_all_leaves.__doc__)
 	print(g.tree.__doc__)
 	#print g.get_all_leaves()
-	#print(rs.getGeneTreeById('ENSGT00390000003602', aligned=1, format='phyloxml'))
+	print(rs.getGeneTreeById('ENSGT00390000003602', aligned=1, format='phyloxml'))
 
 def test_Assembly():
 	g = rs.getAssemblyInfo('human')
@@ -32,7 +32,7 @@ def test_Assembly():
 	print(g.top_level_region[0])
 	print(g.top_level_region[0].length)
 
-	print(rs.getAssemblyInfoRegion('human', 'X', format='json'))
+	print(rs.getAssemblyInfoRegion('human', 19, format='json', badarg=4))
 
 def test_Archive():
 	g = rs.getArchiveEntry('ENSG00000157764')
@@ -41,9 +41,20 @@ def test_Archive():
 	print(g.__class__)
 	print(g)
 
-#test_Archive()
-test_GeneTree()
+def test_others():
+	print(rs.ping())
+	print(rs.rest_version())
+	print(rs.ensembl_version())
+	print(rs.compara_databases())
+	print(rs.compara_methods())
+	print(rs.species_list()[0])
+	print(rs.getAnalysisList('chicken'))
+
+
+test_Archive()
+#test_GeneTree()
 test_Assembly()
+test_others()
 
 sys.exit(0)
 test_Archive()
