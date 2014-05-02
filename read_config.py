@@ -137,7 +137,7 @@ def get_code_for_endpoint(e):
 		", ".join(required_params),
 		'/'.join(endpoint_url_segments),
 		d['description'],
-		"ensembl." + e.get('object'),
+		"ensembl." + e.get('object') if e.get('object') is not None else "None",
 		d['output'],
 		", ".join(d['output']),
 		d['endpoint'],
