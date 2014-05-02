@@ -86,6 +86,20 @@ HTTP endpoint: {7}
 		return self.build_rest_answer({4}, {5}, {10}, '{2}'.format({1}), kwargs)
 '''
 
+template_endpoint_no_args = '''
+	def {0}(self, **kwargs):
+		"""{3}
+
+Return type: {4}
+Valid formats: {6}
+HTTP endpoint: {7}
+
+{8}
+{9}"""
+		return self.build_rest_answer({4}, {5}, {10}, '{2}', kwargs)
+'''
+
+
 def parameter_docstring(param_name, parameter_details):
 	return "- %s (%s)\n\t%s\n" % (param_name, parameter_details['type'], parameter_details['description'])
 
@@ -100,7 +114,7 @@ def get_code_for_endpoint(e):
 	d = decode_config(re.text, ['output'])
 	d['endpoint'] = d['endpoint'].replace('"', '')
 
-	ordered_parameters = [(p.tag,decode_config(p.text)) for p in re.find('params')]
+	ordered_parameters = [(p.tag,decode_config(p.text)) for p in (re.find('params') or [])]
 	parameter_details = dict(ordered_parameters)
 
 	endpoint_url_segments = []
@@ -118,7 +132,7 @@ def get_code_for_endpoint(e):
 
 	optional_params = [p for (p,dp) in ordered_parameters if (p not in required_params) and ('deprecated' not in dp)]
 
-	return template_endpoint.format(
+	return (template_endpoint if len(required_params) else template_endpoint_no_args).format(
 		e.get('name'),
 		", ".join(required_params),
 		'/'.join(endpoint_url_segments),
