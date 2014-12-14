@@ -13,7 +13,10 @@
 			<object name="Biotype" />
 		</namespace>
 		<namespace name="compara" >
-			<object name="GeneTree" description="Global object for gene-trees" />
+
+			<object name="GeneTree" description="Global object for gene-trees" >
+				<property name="id" description="GeneTree stable identifier" />
+			</object>
 			<object name="GeneTreeNode" description="Node in a gene-tree" />
 			<object name="GeneTreeNodeConfidence" description="The confidence tags attached to a given gene-tree node" />
 			<object name="GeneTreeMember" description="Used in gene-tree leaves to show the actual protein that was used to build the tree" />

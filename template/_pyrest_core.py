@@ -14,12 +14,14 @@ construction_rules = {}
 class BaseObject(object):
 
     def __init__(self, adict):
-        self.__dict__.update(adict)
         for k, v in adict.items():
             new_class = construction_rules.get( (self.__class__, k))
             # This test is only needed in development mode
             if (new_class is None) and ((isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict))):
                 print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
+            if k in type(self).__dict__:
+                # The property is defined in the documentation. The actual value must be stored in a separate entry
+                k = "_" + k
             self.__dict__[k] = construct_object_from_json(v, new_class)
 
     def __str__(self):

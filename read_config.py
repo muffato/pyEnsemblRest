@@ -34,18 +34,28 @@ class %s(ensembl.BaseObject):
     \"\"\"%s\"\"\"
 """
 
+template_property = """
+    #{0} = property(lambda self : getattr(self, "_{0}"), None, None, \"\"\"{1}\"\"\")
+    {0} = property(lambda self : getattr(self, "_{0}"), lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
+"""
 
 init_imports = []
 
 # All the module names
 for config_python_module in config_root.find('objects'):
+    # config_python_module is a <namespace> element
     module_name = config_python_module.get('name')
     init_imports.append(template_init_import_module % module_name)
 
     # All the objects in this module
-    files[module_name] = template_module_header + "\n" + "".join(
-        template_module_object % (config_python_object.get('name'), config_python_object.get('description', '')) for config_python_object in config_python_module
-    )
+    module_code = [ template_module_header, "\n" ]
+    for config_python_object in config_python_module:
+        # config_python_object is a <object> element
+        module_code.append( template_module_object % (config_python_object.get('name'), config_python_object.get('description', '')) )
+        for prop in config_python_object:
+            # prop is a <property> element
+            module_code.append( template_property.format( prop.get('name'), prop.get('description') ) )
+    files[module_name] = "".join(module_code)
 
     # Adds the extra methods we want on those objects
     filename = 'template/%s.py' % module_name
