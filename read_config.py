@@ -128,7 +128,15 @@ def get_code_for_endpoint(e):
     except KeyError:
         raise SyntaxError("No 'endpoint' parameter in the endpoint id '{0}'".format(re.tag))
 
-    ordered_parameters = [(p.tag,decode_config(p.text)) for p in (re.find('params') or [])]
+    ordered_parameters = []
+    for p in (re.find('params') or []):
+        t = p.text
+        if list(p):
+            print("Warning, there are some HTML tags inside the description of '{0}'. Trying to sort it out ...".format(d['endpoint']), file=sys.stderr)
+            for x in p:
+                t = t + ET.tostring(x, encoding="unicode", method="html")
+            print("Please check the reconstructed string:", t, file=sys.stderr )
+        ordered_parameters.append( (p.tag,decode_config(t)) )
     parameter_details = dict(ordered_parameters)
 
     endpoint_url_segments = []
