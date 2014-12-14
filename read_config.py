@@ -59,8 +59,11 @@ replace_placeholder_in_template('__init__', '__MODULE_IMPORTS__', init_imports, 
 
 endpoints = {}
 for f in glob.glob('%s/root/documentation/*.conf' % rest_checkout):
-    for e in ET.parse(f).getroot():
-        endpoints[e.tag] = e
+    try:
+        for e in ET.parse(f).getroot():
+            endpoints[e.tag] = e
+    except ET.ParseError as ex:
+        raise SyntaxError("Cannot parse " + f) from ex
 
 # Decodes a text that is a bunch of "key=value" lines
 # The keys listed in "mul" can be found in several copies
