@@ -123,7 +123,10 @@ def get_code_for_endpoint(e):
 
     re = endpoints[e.get('id')]
     d = decode_config(re.text, ['output'])
-    d['endpoint'] = d['endpoint'].replace('"', '')
+    try:
+        d['endpoint'] = d['endpoint'].replace('"', '')
+    except KeyError:
+        raise SyntaxError("No 'endpoint' parameter in the endpoint id '{0}'".format(re.tag))
 
     ordered_parameters = [(p.tag,decode_config(p.text)) for p in (re.find('params') or [])]
     parameter_details = dict(ordered_parameters)
