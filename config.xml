@@ -36,7 +36,7 @@
 	</object_links>
 	<endpoints>
 		<!-- Archive section -->
-		<endpoint id="archive_id" name="getArchiveEntry" object="info.ArchiveEntry" />
+		<endpoint id="archive_id_get" name="getArchiveEntry" object="info.ArchiveEntry" />
 		<!-- Comparative Genomics section -->
 		<endpoint id="genetree" name="getGeneTreeById" object="compara.GeneTree" />
 		<endpoint id="genetree_member_id" name="getGeneTreeByMemberId" object="compara.GeneTree" />
