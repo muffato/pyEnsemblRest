@@ -68,11 +68,16 @@ for f in glob.glob('%s/root/documentation/*.conf' % rest_checkout):
 # Decodes a text that is a bunch of "key=value" lines
 # The keys listed in "mul" can be found in several copies
 def decode_config(t, mul=[]):
-    l = [tuple(_.strip() for _ in l.split('=')) for l in t.splitlines() if '=' in l]
-    d = dict(l)
+    pairs = []
+    for l in t.splitlines():
+        part = l.partition('=')
+        if part[1] == '=':
+            pairs.append( (part[0].strip(), part[2].strip()) )
+    #l = [tuple(_.strip() for _ in l.partition('=')) for l in t.splitlines() if '=' in l]
+    d = dict(pairs)
     for k in mul:
         if k in d:
-            d[k] = [x[1] for x in l if x[0] == k]
+            d[k] = [x[1] for x in pairs if x[0] == k]
     return d
 
 
