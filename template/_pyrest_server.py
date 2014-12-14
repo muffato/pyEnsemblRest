@@ -85,7 +85,7 @@ class RestServer:
 
 #__CONSTRUCTION_RULES__
 
-EnsemblRestServer = RestServer(server_url = "http://beta.rest.ensembl.org")
+EnsemblRestServer = RestServer(server_url = "http://rest.ensembl.org")
 EnsemblGenomesRestServer = RestServer(server_url = "http://test.rest.ensemblgenomes.org")
 
 
