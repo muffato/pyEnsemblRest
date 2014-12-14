@@ -21,6 +21,8 @@ def test_GeneTree():
     print(g.tree.__doc__)
     #print g.get_all_leaves()
     print(rs.getGeneTreeById('ENSGT00390000003602', aligned=1, format='phyloxml'))
+    rs.getGeneTreeByMemberId("ENSG00000139618")
+    rs.getGeneTreeByMemberSymbol("human", "brca2")
 
 def test_Assembly():
     g = rs.getAssemblyInfo('human')
@@ -45,16 +47,16 @@ def test_others():
     print("ping", rs.ping())
     print("rest_version", rs.rest_version())
     print("ensembl_version", rs.ensembl_version())
-    print("compara_databases", rs.compara_databases())
-    print("compara_methods", rs.compara_methods())
-    print("1 species", rs.species_list()[0])
+    print("compara_databases", rs.listComparaDatabases())
+    print("compara_methods", rs.getAllComparaMethods())
+    print("1 species", rs.listSpecies()[0])
     print("chicken logic_names", rs.getAnalysisList('chicken'))
     print("MLSS", rs.getSpeciesSetByComparaMethod('EPO'))
-    print("releases", rs.available_releases())
+    print("releases", rs.listAvailableReleases())
 
 
 test_Archive()
-#test_GeneTree()
+test_GeneTree()
 test_Assembly()
 test_others()
 
