@@ -45,6 +45,8 @@ init_imports = []
 for config_python_module in config_root.find('objects'):
     # config_python_module is a <namespace> element
     module_name = config_python_module.get('name')
+    if module_name is None:
+        raise SyntaxError("Namespace without a name")
     init_imports.append(template_init_import_module % module_name)
 
     # All the objects in this module
