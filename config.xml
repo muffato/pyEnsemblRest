@@ -3,6 +3,13 @@
 		<namespace name="genome" >
 			<object name="Identifier" />
 			<object name="Sequence" />
+			<object name="Feature" />
+			<object name="Feature" />
+			<object name="TranscriptFeature" base_class="/Feature" />
+			<object name="TranslationFeature" base_class="/Feature" />
+			<object name="ExonFeature" base_class="/Feature" />
+			<object name="CoordMapping" />
+			<object name="Location" />
 		</namespace>
 		<namespace name="info" >
 			<object name="Assembly" />
@@ -22,7 +29,26 @@
 			<object name="GeneTreeMember" description="Used in gene-tree leaves to show the actual protein that was used to build the tree" />
 			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
 			<object name="NCBITaxon" description="A node in the NCBI taxonomy" />
+
 			<object name="MethodLinkSpeciesSet" />
+
+			<object name="HomologyGroup" description="Group of multiple homology-pairs" />
+			<object name="HomologyPair" description="Homology pair" />
+			<object name="Homolog" />
+			<object name="GenomicAlignment" />
+			<object name="GenomicAlignmentEntry" />
+
+		</namespace>
+		<namespace name="funcgen">
+			<object name="RegulatoryFeature" />
+		</namespace>
+
+		<namespace name="variation">
+			<object name="Variation" />
+			<object name="AlleleLocation" base_class="genome.Location" />
+			<object name="Genotype" />
+			<object name="PopulationGenotype" />
+			<object name="PopulationAllele" />
 		</namespace>
 	</objects>
 	<object_links>
@@ -36,28 +62,95 @@
 		<link src="compara.GeneTreeNode" key="id" target="genome.Identifier" />
 		<link src="compara.GeneTreeMember" key="id" target="genome.Identifier" />
 		<link src="compara.GeneTreeMember" key="mol_seq" target="genome.Sequence" />
+		<link src="compara.HomologyGroup" key="homologies" target="compara.HomologyPair" />
+		<link src="compara.HomologyPair" key="target" target="compara.Homolog" />
+		<link src="compara.HomologyPair" key="source" target="compara.Homolog" />
+		<link src="compara.GenomicAlignment" key="alignments" target="compara.GenomicAlignmentEntry" />
+		<link src="compara.NCBITaxon" key="children" target="compara.NCBITaxon" />
+		<link src="compara.NCBITaxon" key="parent" target="compara.NCBITaxon" />
+		<link src="compara.NCBITaxon" key="tags" target="/dict" />
+		<link src="genome.Feature" key="Transcript" target="genome.TranscriptFeature" />
+		<link src="genome.Feature" key="Translation" target="genome.TranslationFeature" />
+		<link src="genome.Feature" key="Exon" target="genome.ExonFeature" />
+		<link src="genome.TranscriptFeature" key="Translation" target="genome.TranslationFeature" />
+		<link src="genome.TranscriptFeature" key="Exon" target="genome.ExonFeature" />
+		<link src="genome.CoordMapping" key="mapped" target="genome.Location" />
+		<link src="genome.CoordMapping" key="original" target="genome.Location" />
+		<link src="variation.Variation" key="population_genotypes" target="variation.PopulationGenotype" />
+		<link src="variation.Variation" key="populations" target="variation.PopulationAllele" />
+		<link src="variation.Variation" key="genotypes" target="variation.Genotype" />
+		<link src="variation.Variation" key="mappings" target="variation.AlleleLocation" />
 	</object_links>
 	<endpoints>
-		<!-- Archive section -->
+		<!-- archive.conf -->
 		<endpoint id="archive_id_get" name="getArchiveEntry" object="info.ArchiveEntry" />
-		<!-- Comparative Genomics section -->
+
+		<!-- assembly.conf -->
+		<endpoint id="assembly_info" name="getAssemblyInfo" object="info.Assembly" />
+		<endpoint id="assembly_stats" name="getAssemblyInfoRegion" object="info.SeqRegion" />
+
+		<!-- compara,conf -->
 		<endpoint id="genetree" name="getGeneTreeById" object="compara.GeneTree" />
 		<endpoint id="genetree_member_id" name="getGeneTreeByMemberId" object="compara.GeneTree" />
 		<endpoint id="genetree_member_symbol" name="getGeneTreeByMemberSymbol" object="compara.GeneTree" />
-		<!-- Information section -->
-		<endpoint id="assembly_info" name="getAssemblyInfo" object="info.Assembly" />
-		<endpoint id="assembly_stats" name="getAssemblyInfoRegion" object="info.SeqRegion" />
+		<endpoint id="homology_symbol" name="getHomologyByGeneSymbol" object="compara.HomologyGroup" accessor="data" />
+		<endpoint id="homology_ensemblgene" name="getHomologyByGeneStableID" object="compara.HomologyGroup" accessor="data" />
+		<endpoint id="genomic_alignment_region" name="getGenomicAlignmentByRegion" object="compara.GenomicAlignment" />
+
+		<!-- info.conf -->
+		<endpoint id="ping" name="ping" accessor="ping" />
+		<endpoint id="species" name="listSpecies" accessor="species" object="info.Species" />
+		<endpoint id="comparas" name="listComparaDatabases" accessor="comparas" />
+		<endpoint id="software" name="ensembl_version" accessor="release" />
+		<endpoint id="rest" name="rest_version" accessor="release" />
+		<endpoint id="data" name="listAvailableReleases" accessor="releases" />
 		<endpoint id="analysis" name="getAnalysisList" />
 		<endpoint id="biotypes" name="getBiotypesBySpecies" object="info.Biotype" />
-		<endpoint id="compara_methods" name="compara_methods" />
-		<endpoint id="comparas" name="compara_databases" accessor="comparas" />
-		<endpoint id="compara_species_sets" name="getSpeciesSetByComparaMethod" object="compara.MethodLinkSpeciesSet" />
-		<endpoint id="data" name="available_releases" accessor="releases" />
 		<endpoint id="external_dbs" name="getExternalDatabasesBySpecies" object="info.ExternalDatabase" />
-		<endpoint id="ping" name="ping" accessor="ping" />
-		<endpoint id="rest" name="rest_version" accessor="release" />
-		<endpoint id="software" name="ensembl_version" accessor="release" />
-		<endpoint id="species" name="species_list" accessor="species" object="info.Species" />
+		<endpoint id="compara_methods" name="getAllComparaMethods" />
+		<endpoint id="compara_species_sets" name="getSpeciesSetByComparaMethod" object="compara.MethodLinkSpeciesSet" />
+
+		<!-- lookup.conf -->
+		<endpoint id="lookup" name="lookupIdentifier" object="genome.Feature" />
+		<endpoint id="symbol_lookup" name="lookupGeneSymbol" object="genome.Feature" />
+
+		<!-- map.conf -->
+		<endpoint id="assembly_map" name="mapCoordinatesBetweenAssemblies" object="genome.CoordMapping" accessor="mappings" />
+		<endpoint id="assembly_cdna" name="mapCDNACoordinatesToGenome" object="genome.Location" accessor="mappings" />
+		<endpoint id="assembly_cds" name="mapCDSCoordinatesToGenome" object="genome.Location" accessor="mappings" />
+		<endpoint id="assembly_translation" name="mapProteinCoordinatesToGenome" object="genome.Location" accessor="mappings" />
+
+		<!-- ontology.conf -->
+		<!--<endpoint id="ontology_id" name="getOntologyByID" object="" />-->
+		<!--<endpoint id="ontology_name" name="getOntologyByName" object="" />-->
+		<!--<endpoint id="ontology_ancestors" name="getAllAncestorsOfOntologyID" object="" />-->
+		<!--<endpoint id="ontology_descendants" name="getAllDescendantsOfOntologyID" object="" />-->
+
+		<!-- overlap.conf -->
+		<!--<endpoint id="overlap_region" name="getAllFeaturesOnRegion" object="" />-->
+		<!--<endpoint id="overlap_id" name="getAllFeaturesOnFeature" object="" />-->
+		<!--<endpoint id="overlap_translation" name="getAllFeaturesOnTranslation" object="" />-->
+
+		<!-- regulatory.conf -->
+		<endpoint id="regulatory_id" name="getRegulatoryFeatureByID" object="funcgen.RegulatoryFeature" />
+
+		<!-- sequence.conf -->
+		<endpoint id="sequence_id" name="getFeatureSequenceByID" object="genome.Sequence" />
+		<endpoint id="sequence_region" name="getSequenceOfRegion" object="genome.Sequence" />
+
+		<!-- taxonomy.conf -->
+		<endpoint id="taxonomy_id" name="getTaxonomyEntryByID" object="compara.NCBITaxon" />
+		<endpoint id="taxonomy_classification" name="getTaxonomyClassificationByID" object="compara.NCBITaxon" />
+		<endpoint id="taxonomy_name" name="getTaxonomyEntryByName" object="compara.NCBITaxon" />
+
+		<!-- variation.conf -->
+		<endpoint id="variation_id" name="getVariationByID" object="variation.Variation" />
+
+		<!-- vep.conf -->
+		<!--<endpoint id="vep_region_get" name="getVariantConsequencesByRegionAllele" object="" />-->
+		<!--<endpoint id="vep_id_get" name="getVariantConsequencesByVariationID" object="" />-->
+		<!--<endpoint id="vep_hgvs_get" name="getVariantConsequencesByHGVS" object="" />-->
+
 	</endpoints>
 	<content_types>
 		<content_type alias="bed" mime="text/x-bed" />

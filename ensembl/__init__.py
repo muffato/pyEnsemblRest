@@ -12,6 +12,8 @@ from ensembl._pyrest_core import BaseObject, construct_object_from_json
 import ensembl.genome
 import ensembl.info
 import ensembl.compara
+import ensembl.funcgen
+import ensembl.variation
 
 import ensembl._pyrest_server
 from ensembl._pyrest_server import RestServer, EnsemblRestServer, EnsemblGenomesRestServer

@@ -24,6 +24,21 @@ class NCBITaxon(ensembl.BaseObject):
 class MethodLinkSpeciesSet(ensembl.BaseObject):
     """"""
 
+class HomologyGroup(ensembl.BaseObject):
+    """Group of multiple homology-pairs"""
+
+class HomologyPair(ensembl.BaseObject):
+    """Homology pair"""
+
+class Homolog(ensembl.BaseObject):
+    """"""
+
+class GenomicAlignment(ensembl.BaseObject):
+    """"""
+
+class GenomicAlignmentEntry(ensembl.BaseObject):
+    """"""
+
 def _gtn_get_all_leaves(self):
     """
         Get all the leaves under this node

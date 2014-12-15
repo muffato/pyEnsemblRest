@@ -9,6 +9,11 @@ construction_rules = {}
 # Each (key,value) is promoted to object attributes
 # The constructor looks into <construction_rules> to use the correct type for each value
 
+def fget(x):
+    return lambda s : getattr(s, x)
+def fset(x):
+    return lambda s, v: setattr(s, x, v)
+
 # New-style class
 # Otherwise, all the instances share the same type "instance"
 class BaseObject(object):
@@ -19,10 +24,11 @@ class BaseObject(object):
             # This test is only needed in development mode
             if (new_class is None) and ((isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict))):
                 print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
-            if k in type(self).__dict__:
-                # The property is defined in the documentation. The actual value must be stored in a separate entry
-                k = "_" + k
-            self.__dict__[k] = construct_object_from_json(v, new_class)
+            # k is for the property with documentation, kk is for the actual value
+            kk = "_" + k
+            if k not in type(self).__dict__:
+                setattr(type(self), k, property(fget(kk), fset(kk), None, "Undocumented attribute (guessed from the downloaded objects)"))
+            self.__dict__[kk] = construct_object_from_json(v, new_class)
 
     def __str__(self):
         return '{' + ',\n'.join(str(x) + ': ' + str(y) for (x,y) in self.__dict__.items()) + '}'

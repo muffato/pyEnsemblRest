@@ -53,10 +53,60 @@ def test_others():
     print("chicken logic_names", rs.getAnalysisList('chicken'))
     print("MLSS", rs.getSpeciesSetByComparaMethod('EPO'))
     print("releases", rs.listAvailableReleases())
+    print("funcgen", rs.getRegulatoryFeatureByID('human', 'ENSR00001348195'))
+
+def test_Compara():
+    print("alignment", rs.getGenomicAlignmentByRegion("taeniopygia_guttata", "2:106040000-106040050:1", species_set_group="sauropsids"))
+    print("homologs", rs.getHomologyByGeneStableID("ENSG00000139618"))
+
+def test_Lookup():
+    print("gene lookup", rs.lookupIdentifier('ENSG00000157764', expand=1))
+    print("transcript lookup", rs.lookupIdentifier('ENST00000496384', expand=1))
+    print("translation lookup", rs.lookupIdentifier('ENSP00000419060'))
+    print("exon lookup", rs.lookupIdentifier('ENSE00003685923'))
+
+def test_Mapping():
+    print("genome", rs.mapCoordinatesBetweenAssemblies('human', 'GRCh37', 'X:1000000..1000100:1', 'GRCh38'))
+    print("cdna", rs.mapCDNACoordinatesToGenome('ENST00000288602', '100..300'))
+    print("cds", rs.mapCDSCoordinatesToGenome('ENST00000288602', '1..1000'))
+    print("translation", rs.mapProteinCoordinatesToGenome('ENSP00000288602', '100..300'))
+
+def test_Sequence():
+    print("prot", rs.getFeatureSequenceByID('ENSP00000288602'))
+    print("gene", rs.getFeatureSequenceByID('ENSG00000157764'))
+    print("ccds", rs.getFeatureSequenceByID('CCDS5863.1'))
+    print("ccds cds only", rs.getFeatureSequenceByID('CCDS5863.1', object_type='transcript', db_type='otherfeatures', type='cds', species='human'))
+    print("transcript cdna", rs.getFeatureSequenceByID('ENST00000288602', type='cdna'))
+    print("transcript cds", rs.getFeatureSequenceByID('ENST00000288602', type='cds'))
+    print("exon genomic", rs.getFeatureSequenceByID('ENSE00001154485', type='genomic'))
+    print("exon with_5_prime", rs.getFeatureSequenceByID('ENSE00001154485', type='genomic', expand_5prime=10))
+    print("genscan", rs.getFeatureSequenceByID('GENSCAN00000000001', object_type='predictiontranscript', db_type='core', type='protein', species='human'))
+    print("multi seq", rs.getFeatureSequenceByID('ENSG00000157764', multiple_sequences=1, type='protein'))
+    print("region", rs.getSequenceOfRegion('human', 'X:1000000..1000100:1'))
+    print("region contig", rs.getSequenceOfRegion('human', 'ABBA01004489.1:1..100', coord_system='seqlevel'))
+    print("region", rs.getSequenceOfRegion('human', 'X:1000000..1000100:1', expand_5prime=60, expand_3prime=60))
+    print("region", rs.getSequenceOfRegion('human', 'X:1000000..1000100:1', mask='soft'))
+
+def test_Variation():
+    print("variation", rs.getVariationByID('human', 'rs56116432'))
+    print("variation genotypes", rs.getVariationByID('human', 'rs56116432', genotypes=1))
+    print("variation populations", rs.getVariationByID('human', 'rs56116432', populations=1))
+    print("variation population_genotypess", rs.getVariationByID('human', 'rs56116432', population_genotypes=1))
+
+def test_Taxonomy():
+    print("human", rs.getTaxonomyEntryByID(9606))
+    print("human classification", len(rs.getTaxonomyClassificationByID(9606)))
+    print("homo wildcard", len(rs.getTaxonomyEntryByName('homo%')))
 
 
+test_Mapping()
+test_Lookup()
+test_Sequence()
+test_Variation()
+test_Taxonomy()
 test_Archive()
 test_GeneTree()
+test_Compara()
 test_Assembly()
 test_others()
 
