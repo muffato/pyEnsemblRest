@@ -14,6 +14,12 @@ return_codes = {
 #__RESPONSE_CODES__
 }
 
+
+class RestServerException(Exception):
+    """Used when the server returned a non-OK code"""
+    pass
+
+
 class RestServer:
 
     # the key is the time interval (in seconds)
@@ -50,9 +56,9 @@ class RestServer:
         resp, content = self.http.request(self.server_url+"/"+url, method="GET", headers={"Content-Type":content_type})
 
         if resp.status not in return_codes:
-            raise httplib2.HttpLib2Error( "Unknown response code: %d\n%s" % (resp.status, resp) )
+            raise RestServerException( "Unknown response code: %d" % resp.status, resp, content )
         if return_codes[resp.status][0] != "OK":
-            raise httplib2.HttpLib2Error( "Invalid response code: %s (%d)\n%s\n%s" % (return_codes[resp.status][0], resp.status, return_codes[resp.status][1], resp) )
+            raise RestServerException( "Invalid response code: %s (%d)\n%s" % (return_codes[resp.status][0], resp.status, return_codes[resp.status][1]), resp, content )
 
         return content.decode('utf-8')
 
