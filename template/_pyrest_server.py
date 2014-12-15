@@ -3,6 +3,7 @@ import collections
 import httplib2
 import json
 import time
+import urllib
 
 import ensembl
 
@@ -73,7 +74,7 @@ class RestServer:
                 format = None
 
         if len(kwargs):
-            url = url + "?" + "&".join("%s=%s" % (p,kwargs[p]) for p in set(kwargs).intersection(optional_params))
+            url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(kwargs[p]))) for p in set(kwargs).intersection(optional_params))
 
         content = self.get_json_answer(url, content_types.get(format, content_types['json']))
 
