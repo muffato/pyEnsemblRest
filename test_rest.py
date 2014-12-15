@@ -20,7 +20,7 @@ def test_GeneTree():
     print(g.get_all_leaves.__doc__)
     print(g.tree.__doc__)
     #print g.get_all_leaves()
-    print(rs.getGeneTreeById('ENSGT00390000003602', aligned=1, format='phyloxml'))
+    print(rs.getGeneTreeById('ENSGT00390000003602', aligned=1, output_format='phyloxml'))
     rs.getGeneTreeByMemberId("ENSG00000139618")
     rs.getGeneTreeByMemberSymbol("human", "brca2")
 
@@ -34,7 +34,7 @@ def test_Assembly():
     print(g.top_level_region[0])
     print(g.top_level_region[0].length)
 
-    print(rs.getAssemblyInfoRegion('human', 19, format='json', badarg=4))
+    print(rs.getAssemblyInfoRegion('human', 19, output_format='json', badarg=4))
 
 def test_Archive():
     g = rs.getArchiveEntry('ENSG00000157764')

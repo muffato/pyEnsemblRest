@@ -65,7 +65,7 @@ class RestServer:
 
     def build_rest_answer(self, new_object, allowed_formats, optional_params, accessor, url, kwargs={}):
 
-        format = kwargs.pop('format', None)
+        format = kwargs.pop('output_format', None)
         if format is not None:
             format = format.lower()
             if format not in allowed_formats:
