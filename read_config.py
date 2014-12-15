@@ -24,13 +24,16 @@ def replace_placeholder_in_template(filename, key, content_list, sep=''):
     files[filename] = files[filename].replace('#'+key, sep.join(content_list))
 
 
+def correct_namespace(n):
+    return n[1:] if n.startswith('/') else 'ensembl.' + n
+
 ## Generate all the modules with basic object definition
 
 template_init_import_module = 'import ensembl.%s'
 template_module_header = 'import ensembl'
 
 template_module_object = """
-class {0}(ensembl.BaseObject):
+class {0}({2}):
     \"\"\"{1}\"\"\"
 """
 
@@ -53,7 +56,7 @@ for config_python_module in config_root.find('objects'):
     module_code = [ template_module_header, "\n" ]
     for config_python_object in config_python_module:
         # config_python_object is a <object> element
-        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), config_python_object.get('base_class', '')  ) )
+        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), correct_namespace(config_python_object.get('base_class', 'BaseObject')) ) )
         for prop in config_python_object:
             # prop is a <property> element
             module_code.append( template_property.format( prop.get('name'), prop.get('description') ) )
@@ -198,7 +201,7 @@ build_and_replace('__ENDPOINTS_METHODS__', 'endpoints', 'endpoint', get_code_for
 
 # construction_rules
 build_and_replace('__CONSTRUCTION_RULES__', 'object_links', 'link',
-        lambda c: "ensembl._pyrest_core.construction_rules[(ensembl.%s,'%s')] = ensembl.%s" % (c.get('src'), c.get('key'), c.get('target')), sep="\n"
+        lambda c: "ensembl._pyrest_core.construction_rules[(ensembl.%s,'%s')] = %s" % (c.get('src'), c.get('key'), correct_namespace(c.get('target'))), sep="\n"
 )
 
 # content_types
