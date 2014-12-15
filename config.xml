@@ -66,7 +66,7 @@
 		<content_type alias="json" mime="application/json" />
 		<content_type alias="nh" mime="text/x-nh" />
 		<content_type alias="phyloxml" mime="text/x-phyloxml+xml" />
-		<content_type alias="xml" mime="text/x-phyloxml+xml" />
+		<content_type alias="xml" mime="text/xml" />
 		<content_type alias="yaml" mime="text/x-yaml" />
 		<content_type alias="text" mime="text/plain" />
 	</content_types>
