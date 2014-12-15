@@ -30,8 +30,8 @@ template_init_import_module = 'import ensembl.%s'
 template_module_header = 'import ensembl'
 
 template_module_object = """
-class %s(ensembl.BaseObject):
-    \"\"\"%s\"\"\"
+class {0}(ensembl.BaseObject):
+    \"\"\"{1}\"\"\"
 """
 
 template_property = """
@@ -53,7 +53,7 @@ for config_python_module in config_root.find('objects'):
     module_code = [ template_module_header, "\n" ]
     for config_python_object in config_python_module:
         # config_python_object is a <object> element
-        module_code.append( template_module_object % (config_python_object.get('name'), config_python_object.get('description', '')) )
+        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), config_python_object.get('base_class', '')  ) )
         for prop in config_python_object:
             # prop is a <property> element
             module_code.append( template_property.format( prop.get('name'), prop.get('description') ) )
