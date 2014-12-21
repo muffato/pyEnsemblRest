@@ -4,6 +4,8 @@ import sys
 # A dictionnary of (class, key): class
 construction_rules = {}
 
+def dict_wrapper(new_type):
+    return lambda d, r : {k: new_type(v, r) for (k,v) in d.items()}
 
 # Base class for JSON dictionnaries
 # Each (key,value) is promoted to object attributes
