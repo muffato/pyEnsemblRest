@@ -74,7 +74,15 @@ class RestServer:
                 format = None
 
         if len(kwargs):
-            url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(kwargs[p]))) for p in set(kwargs).intersection(optional_params))
+            ps = set(kwargs).intersection(optional_params)
+            pairs = []
+            for p in ps:
+                vv = kwargs[p]
+                if isinstance(vv, list):
+                    pairs.extend( (p,_) for _ in vv)
+                else:
+                    pairs.append( (p,vv) )
+            url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(v))) for (p,v) in pairs)
 
         content = self.get_json_answer(url, content_types.get(format, content_types['json']))
 
