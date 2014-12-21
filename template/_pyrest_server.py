@@ -85,7 +85,7 @@ class RestServer:
         j = json.loads(content)
         if accessor is not None:
             j = j[accessor]
-        return ensembl.construct_object_from_json(j, new_object)
+        return ensembl.construct_object_from_json(j, new_object, self)
 
 #__ENDPOINTS_METHODS__
 
