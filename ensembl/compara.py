@@ -1,3 +1,14 @@
+
+def _tax_parent(self):
+    if '_parent' not in self.__dict__:
+        if not hasattr(self, '_id'):
+            print("'id' is not defined, cannot fetch the parent node")
+            return None
+        copy = self.server.getTaxonomyEntryByID(self.id)
+        self.__dict__['_parent'] = copy.__dict__['_parent']
+    return self.__dict__['_parent']
+
+
 import ensembl
 
 class GeneTree(ensembl.BaseObject):
@@ -21,6 +32,9 @@ class GeneTreeEvent(ensembl.BaseObject):
 class NCBITaxon(ensembl.BaseObject):
     """A node in the NCBI taxonomy"""
 
+    #parent = property(_tax_parent, None, None, """Parent node in the taxonomy""")
+    parent = property(_tax_parent, lambda self, val : setattr(self, "_parent", val), None, """Parent node in the taxonomy""")
+
 class MethodLinkSpeciesSet(ensembl.BaseObject):
     """"""
 
@@ -39,11 +53,12 @@ class GenomicAlignment(ensembl.BaseObject):
 class GenomicAlignmentEntry(ensembl.BaseObject):
     """"""
 
+
 def _gtn_get_all_leaves(self):
     """
         Get all the leaves under this node
     """
-    if 'children' not in self.__dict__:
+    if '_children' not in self.__dict__:
         return [self]
     l = []
     for n in self.children:

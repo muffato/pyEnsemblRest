@@ -87,7 +87,15 @@ class RestServer:
                 format = None
 
         if len(kwargs):
-            url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(kwargs[p]))) for p in set(kwargs).intersection(optional_params))
+            ps = set(kwargs).intersection(optional_params)
+            pairs = []
+            for p in ps:
+                vv = kwargs[p]
+                if isinstance(vv, list):
+                    pairs.extend( (p,_) for _ in vv)
+                else:
+                    pairs.append( (p,vv) )
+            url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(v))) for (p,v) in pairs)
 
         content = self.get_json_answer(url, content_types.get(format, content_types['json']))
 
@@ -98,7 +106,7 @@ class RestServer:
         j = json.loads(content)
         if accessor is not None:
             j = j[accessor]
-        return ensembl.construct_object_from_json(j, new_object)
+        return ensembl.construct_object_from_json(j, new_object, self)
 
 
     def getArchiveEntry(self, id, **kwargs):
@@ -501,7 +509,7 @@ Optional parameters:
     def lookupIdentifier(self, id, **kwargs):
         """Find the species and database for a single identifier
 
-Return type: ensembl.genome.Feature
+Return type: ensembl.genome.feature_wrapper
 Valid formats: json, xml
 HTTP endpoint: lookup/id/:id
 
@@ -519,13 +527,13 @@ Optional parameters:
 - expand (Boolean(0,1))
     Expands the search to include any connected features. e.g. If the object is a gene, its transcripts, translations and exons will be returned as well.
 """
-        return self.build_rest_answer(ensembl.genome.Feature, ['json', 'xml'], ['species', 'db_type', 'format', 'expand'], None, 'lookup/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml'], ['species', 'db_type', 'format', 'expand'], None, 'lookup/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def lookupGeneSymbol(self, species, symbol, **kwargs):
         """Find the species and database for a symbol in a linked external database
 
-Return type: ensembl.genome.Feature
+Return type: ensembl.genome.feature_wrapper
 Valid formats: json, xml
 HTTP endpoint: lookup/symbol/:species/:symbol
 
@@ -541,7 +549,7 @@ Optional parameters:
 - expand (Boolean(0,1))
     Expands the search to include any connected features. e.g. If the object is a gene, its transcripts, translations and exons will be returned as well.
 """
-        return self.build_rest_answer(ensembl.genome.Feature, ['json', 'xml'], ['format', 'expand'], None, 'lookup/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
+        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml'], ['format', 'expand'], None, 'lookup/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
 
 
     def mapCoordinatesBetweenAssemblies(self, species, asm_one, region, asm_two, **kwargs):
@@ -626,6 +634,206 @@ Optional parameters:
     Species name/alias
 """
         return self.build_rest_answer(ensembl.genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/translation/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
+
+
+    def getOntologyByID(self, id, **kwargs):
+        """Search for an ontological term by its namespaced identifier
+
+Return type: ensembl.info.OntologyTerm
+Valid formats: json, xml, yaml
+HTTP endpoint: ontology/id/:id
+
+Required parameters:
+- id (String)
+    An ontology term identifier
+
+Optional parameters:
+- relation (String)
+    The types of relationships to include in the output. Fetches all relations by default
+- simple (Boolean)
+    If set the API will avoid the fetching of parent and child terms
+"""
+        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml', 'yaml'], ['relation', 'simple'], None, 'ontology/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+
+
+    def getOntologyByName(self, name, **kwargs):
+        """Search for a list of ontological terms by their name
+
+Return type: ensembl.info.OntologyTerm
+Valid formats: json, xml, yaml
+HTTP endpoint: ontology/name/:name
+
+Required parameters:
+- name (String)
+    An ontology name. SQL wildcards are supported
+
+Optional parameters:
+- ontology (String)
+    Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
+- relation (String)
+    The types of relationships to include in the output. Fetches all relations by default
+- simple (Boolean)
+    If set the API will avoid the fetching of parent and child terms
+"""
+        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml', 'yaml'], ['ontology', 'relation', 'simple'], None, 'ontology/name/{0}'.format(urllib.parse.quote(str(name))), kwargs)
+
+
+    def getAllAncestorsOfOntologyID(self, id, **kwargs):
+        """Reconstruct the entire ancestry of a term from is_a and part_of relationships
+
+Return type: ensembl.info.OntologyTerm
+Valid formats: json, xml, yaml
+HTTP endpoint: ontology/ancestors/:id
+
+Required parameters:
+- id (String)
+    An ontology term identifier
+
+Optional parameters:
+- ontology (String)
+    Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
+"""
+        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml', 'yaml'], ['ontology'], None, 'ontology/ancestors/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+
+
+    def getAllDescendantsOfOntologyID(self, id, **kwargs):
+        """Find all the terms descended from a given term. By default searches are conducted within the namespace of the given identifier
+
+Return type: ensembl.info.OntologyTerm
+Valid formats: json, xml
+HTTP endpoint: ontology/descendants/:id
+
+Required parameters:
+- id (String)
+    An ontology term identifier
+
+Optional parameters:
+- ontology (String)
+    Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
+- subset (String)
+    Filter terms by the specified subset
+- closest_term (Boolean)
+    If true return only the closest terms to the specified term
+- zero_distance (Boolean)
+    Return terms with a distance of 0
+"""
+        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml'], ['ontology', 'subset', 'closest_term', 'zero_distance'], None, 'ontology/descendants/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+
+
+    def getOntologyAncestorChart(self, id, **kwargs):
+        """Reconstruct the entire ancestry of a term from is_a and part_of relationships.
+
+Return type: ensembl.dict_wrapper(ensembl.info.OntologyEntry)
+Valid formats: json, xml
+HTTP endpoint: ontology/ancestors/chart/:id
+
+Required parameters:
+- id (String)
+    An ontology term identifier
+
+Optional parameters:
+- ontology (String)
+    Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
+"""
+        return self.build_rest_answer(ensembl.dict_wrapper(ensembl.info.OntologyEntry), ['json', 'xml'], ['ontology'], None, 'ontology/ancestors/chart/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+
+
+    def getAllFeaturesOnFeatureID(self, id, **kwargs):
+        """Retrieves features (e.g. genes, transcripts, variations etc.) that overlap a region defined by the given identifier.
+
+Return type: ensembl.genome.feature_wrapper
+Valid formats: json, xml, gff3, bed
+HTTP endpoint: overlap/id/:id
+
+Required parameters:
+- id (String)
+    An Ensembl stable ID
+
+Optional parameters:
+- species (String)
+    Species name/alias.
+- object_type (String)
+    Filter by feature type
+- db_type (String)
+    Restrict the search to a database other than the default. Useful if you need to use a DB other than core
+- feature (Enum(gene, transcript, cds, exon, repeat, simple, misc, variation, somatic_variation, structural_variation, somatic_structural_variation, constrained, regulatory, segmentation, motif, chipseq, array_probe))
+    The type of feature to retrieve. Multiple values are accepted.
+- species_set (String)
+    Filter by species set for retrieving constrained elements.
+- logic_name (String)
+    Limit retrieval of genes, transcripts and exons by a given name of an analysis.
+- so_term (String)
+    Sequence Ontology term to narrow down the possible variations returned.
+- misc_set (String)
+    Miscellaneous set which groups together feature entries. Consult the DB or returned data sets to discover what is available.
+- biotype (String)
+    The functional classification of the gene or transcript to fetch. Cannot be used in conjunction with logic_name when querying transcripts.
+"""
+        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml', 'gff3', 'bed'], ['species', 'object_type', 'db_type', 'feature', 'species_set', 'logic_name', 'so_term', 'misc_set', 'biotype'], None, 'overlap/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+
+
+    def getAllFeaturesOnRegion(self, species, region, **kwargs):
+        """Retrieves multiple types of features for a given region.
+
+Return type: ensembl.genome.feature_wrapper
+Valid formats: json, xml, gff3, bed
+HTTP endpoint: overlap/region/:species/:region
+
+Required parameters:
+- species (String)
+    Species name/alias.
+- region (String)
+    Query region. A maximum of 5Mb is allowed to be requested at any one time
+
+Optional parameters:
+- db_type (String)
+    Specify the database type to retrieve features from if not using the core database. We automatically choose the correct type of DB for variation, comparative and regulation features.
+- feature (Enum(gene, transcript, cds, exon, repeat, simple, misc, variation, somatic_variation, structural_variation, somatic_structural_variation, constrained, regulatory, segmentation, motif, chipseq, array_probe))
+    The type of feature to retrieve. Multiple values are accepted.
+- species_set (String)
+    The species set name for retrieving constrained elements.
+- logic_name (String)
+    Limit retrieval of genes, transcripts and exons by the name of analysis.
+- so_term (String)
+    Sequence Ontology term to restrict the variations found. Its descendants are also included in the search.
+- cell_type (String)
+    Cell type name in Ensembl's Regulatory Build, required for segmentation feature, optional for regulatory elements.
+- misc_set (String)
+    Miscellaneous set which groups together feature entries. Consult the DB or returned data sets to discover what is available.
+- biotype (String)
+    Functional classification of the gene or transcript to fetch. Cannot be used in conjunction with logic_name when querying transcripts.
+- trim_upstream (Boolean)
+    Do not return features which overlap upstream end of the region.
+- trim_downstream (Boolean)
+    Do not return features which overlap the downstream end of the region.
+"""
+        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml', 'gff3', 'bed'], ['db_type', 'feature', 'species_set', 'logic_name', 'so_term', 'cell_type', 'misc_set', 'biotype', 'trim_upstream', 'trim_downstream'], None, 'overlap/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
+
+
+    def getAllFeaturesOnTranslation(self, id, **kwargs):
+        """Retrieve features related to a specific Translation as described by its stable ID (e.g. domains, variations).
+
+Return type: ensembl.genome.feature_wrapper
+Valid formats: json, xml
+HTTP endpoint: overlap/translation/:id
+
+Required parameters:
+- id (String)
+    An Ensembl stable ID
+
+Optional parameters:
+- species (String)
+    Species name/alias.
+- db_type (String)
+    Restrict the search to a database other than the default. Useful if you need to use a DB other than core
+- feature (Enum(transcript_variation, protein_feature, residue_overlap, translation_exon, somatic_transcript_variation))
+    Specify the type of features requested for the translation.
+- type (String)
+    Type of data to filter by. By default, all features are returned. Can specify a domain or consequence type.
+- so_term (String)
+    Sequence Ontology term to restrict the variations found. Its descendants are also included in the search.
+"""
+        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml'], ['species', 'db_type', 'feature', 'type', 'so_term'], None, 'overlap/translation/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getRegulatoryFeatureByID(self, species, id, **kwargs):
@@ -789,6 +997,10 @@ Optional parameters:
 
 
 ensembl._pyrest_core.construction_rules[(ensembl.info.Assembly,'top_level_region')] = ensembl.info.SeqRegion
+ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyTerm,'children')] = ensembl.info.OntologyTerm
+ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyTerm,'parents')] = ensembl.info.OntologyTerm
+ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyEntry,'is_a')] = ensembl.info.OntologyTerm
+ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyEntry,'term')] = ensembl.info.OntologyTerm
 ensembl._pyrest_core.construction_rules[(ensembl.compara.GeneTree,'tree')] = ensembl.compara.GeneTreeNode
 ensembl._pyrest_core.construction_rules[(ensembl.compara.GeneTreeNode,'taxonomy')] = ensembl.compara.NCBITaxon
 ensembl._pyrest_core.construction_rules[(ensembl.compara.GeneTreeNode,'events')] = ensembl.compara.GeneTreeEvent
@@ -804,10 +1016,8 @@ ensembl._pyrest_core.construction_rules[(ensembl.compara.HomologyPair,'source')]
 ensembl._pyrest_core.construction_rules[(ensembl.compara.GenomicAlignment,'alignments')] = ensembl.compara.GenomicAlignmentEntry
 ensembl._pyrest_core.construction_rules[(ensembl.compara.NCBITaxon,'children')] = ensembl.compara.NCBITaxon
 ensembl._pyrest_core.construction_rules[(ensembl.compara.NCBITaxon,'parent')] = ensembl.compara.NCBITaxon
-ensembl._pyrest_core.construction_rules[(ensembl.compara.NCBITaxon,'tags')] = dict
-ensembl._pyrest_core.construction_rules[(ensembl.genome.Feature,'Transcript')] = ensembl.genome.TranscriptFeature
-ensembl._pyrest_core.construction_rules[(ensembl.genome.Feature,'Translation')] = ensembl.genome.TranslationFeature
-ensembl._pyrest_core.construction_rules[(ensembl.genome.Feature,'Exon')] = ensembl.genome.ExonFeature
+ensembl._pyrest_core.construction_rules[(ensembl.compara.NCBITaxon,'tags')] = None
+ensembl._pyrest_core.construction_rules[(ensembl.genome.GeneFeature,'Transcript')] = ensembl.genome.TranscriptFeature
 ensembl._pyrest_core.construction_rules[(ensembl.genome.TranscriptFeature,'Translation')] = ensembl.genome.TranslationFeature
 ensembl._pyrest_core.construction_rules[(ensembl.genome.TranscriptFeature,'Exon')] = ensembl.genome.ExonFeature
 ensembl._pyrest_core.construction_rules[(ensembl.genome.CoordMapping,'mapped')] = ensembl.genome.Location

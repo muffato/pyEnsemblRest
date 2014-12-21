@@ -18,3 +18,9 @@ class ExternalDatabase(ensembl.BaseObject):
 class Biotype(ensembl.BaseObject):
     """"""
 
+class OntologyTerm(ensembl.BaseObject):
+    """"""
+
+class OntologyEntry(ensembl.BaseObject):
+    """"""
+
