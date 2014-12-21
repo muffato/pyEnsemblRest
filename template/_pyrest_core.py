@@ -20,10 +20,10 @@ class BaseObject(object):
 
     def __init__(self, adict):
         for k, v in adict.items():
-            new_class = construction_rules.get( (self.__class__, k))
             # This test is only needed in development mode
-            if (new_class is None) and ((isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict))):
+            if ((self.__class__, k) not in construction_rules) and ((isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict))):
                 print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
+            new_class = construction_rules.get( (self.__class__, k) )
             # k is for the property with documentation, kk is for the actual value
             kk = "_" + k
             if k not in type(self).__dict__:

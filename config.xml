@@ -68,7 +68,7 @@
 		<link src="compara.GenomicAlignment" key="alignments" target="compara.GenomicAlignmentEntry" />
 		<link src="compara.NCBITaxon" key="children" target="compara.NCBITaxon" />
 		<link src="compara.NCBITaxon" key="parent" target="compara.NCBITaxon" />
-		<link src="compara.NCBITaxon" key="tags" target="/dict" />
+		<link src="compara.NCBITaxon" key="tags" target="/None" />
 		<link src="genome.Feature" key="Transcript" target="genome.TranscriptFeature" />
 		<link src="genome.Feature" key="Translation" target="genome.TranslationFeature" />
 		<link src="genome.Feature" key="Exon" target="genome.ExonFeature" />
