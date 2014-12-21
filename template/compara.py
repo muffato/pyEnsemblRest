@@ -3,7 +3,7 @@ def _gtn_get_all_leaves(self):
     """
         Get all the leaves under this node
     """
-    if 'children' not in self.__dict__:
+    if '_children' not in self.__dict__:
         return [self]
     l = []
     for n in self.children:
