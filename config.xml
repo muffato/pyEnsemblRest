@@ -18,6 +18,8 @@
 			<object name="Species" />
 			<object name="ExternalDatabase" />
 			<object name="Biotype" />
+			<object name="OntologyTerm" />
+			<object name="OntologyEntry" />
 		</namespace>
 		<namespace name="compara" >
 
@@ -55,6 +57,10 @@
 	</objects>
 	<object_links>
 		<link src="info.Assembly" key="top_level_region" target="info.SeqRegion" />
+		<link src="info.OntologyTerm" key="children" target="info.OntologyTerm" />
+		<link src="info.OntologyTerm" key="parents" target="info.OntologyTerm" />
+		<link src="info.OntologyEntry" key="is_a" target="info.OntologyTerm" />
+		<link src="info.OntologyEntry" key="term" target="info.OntologyTerm" />
 		<link src="compara.GeneTree" key="tree" target="compara.GeneTreeNode" />
 		<link src="compara.GeneTreeNode" key="taxonomy" target="compara.NCBITaxon" />
 		<link src="compara.GeneTreeNode" key="events" target="compara.GeneTreeEvent" />
@@ -123,10 +129,11 @@
 		<endpoint id="assembly_translation" name="mapProteinCoordinatesToGenome" object="genome.Location" accessor="mappings" />
 
 		<!-- ontology.conf -->
-		<!--<endpoint id="ontology_id" name="getOntologyByID" object="" />-->
-		<!--<endpoint id="ontology_name" name="getOntologyByName" object="" />-->
-		<!--<endpoint id="ontology_ancestors" name="getAllAncestorsOfOntologyID" object="" />-->
-		<!--<endpoint id="ontology_descendants" name="getAllDescendantsOfOntologyID" object="" />-->
+		<endpoint id="ontology_id" name="getOntologyByID" object="info.OntologyTerm" />
+		<endpoint id="ontology_name" name="getOntologyByName" object="info.OntologyTerm" />
+		<endpoint id="ontology_ancestors" name="getAllAncestorsOfOntologyID" object="info.OntologyTerm" />
+		<endpoint id="ontology_descendants" name="getAllDescendantsOfOntologyID" object="info.OntologyTerm" />
+		<endpoint id="ontology_ancestors_chart" name="getOntologyAncestorChart" object="dict_wrapper(ensembl.info.OntologyEntry)"/>
 
 		<!-- overlap.conf -->
 		<!--<endpoint id="overlap_region" name="getAllFeaturesOnRegion" object="" />-->
