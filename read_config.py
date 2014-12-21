@@ -174,6 +174,8 @@ def get_code_for_endpoint(e):
                 print("'required' should be set to 1 for '%s' in '%s'" % (p, d['endpoint']), file=sys.stderr)
         else:
             endpoint_url_segments.append(url_segment)
+    if len(required_params) != len([x for x in parameter_details.values() if x.get('required') == '1']):
+        print("Discrepancy in the list of required parameters for", d['endpoint'])
 
     optional_params = [p for (p,dp) in ordered_parameters if (p not in required_params) and ('deprecated' not in dp)]
 
