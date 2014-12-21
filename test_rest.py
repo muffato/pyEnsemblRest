@@ -98,7 +98,20 @@ def test_Taxonomy():
     print("human classification", len(rs.getTaxonomyClassificationByID(9606)))
     print("homo wildcard", len(rs.getTaxonomyEntryByName('homo%')))
 
+def test_Ontology():
+    print("id", rs.getOntologyByID('GO:0005667'))
+    print("name", rs.getOntologyByName('transcription factor complex'))
+    print("descendants", rs.getAllDescendantsOfOntologyID('GO:0005667'))
+    print("ancestors", rs.getAllAncestorsOfOntologyID('GO:0005667'))
+    print("ancestor_chart", rs.getOntologyAncestorChart('GO:0005667'))
 
+def test_Overlap():
+    print("id", rs.getAllFeaturesOnFeatureID('ENSG00000157764', feature=["cds","gene"]))
+    print("region", rs.getAllFeaturesOnRegion('human', '7:140424943-140624564', feature=['transcript', 'exon']))
+    print("translation", rs.getAllFeaturesOnTranslation('ENSP00000288602'))
+
+test_Overlap()
+test_Ontology()
 test_Mapping()
 test_Lookup()
 test_Sequence()
