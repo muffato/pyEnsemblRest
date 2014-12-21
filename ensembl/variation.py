@@ -15,3 +15,12 @@ class PopulationGenotype(ensembl.BaseObject):
 class PopulationAllele(ensembl.BaseObject):
     """"""
 
+class VEPResult(ensembl.BaseObject):
+    """"""
+
+class Consequence(ensembl.BaseObject):
+    """"""
+
+class Variant(ensembl.BaseObject):
+    """"""
+

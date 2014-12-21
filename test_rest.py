@@ -110,6 +110,18 @@ def test_Overlap():
     print("region", rs.getAllFeaturesOnRegion('human', '7:140424943-140624564', feature=['transcript', 'exon']))
     print("translation", rs.getAllFeaturesOnTranslation('ENSP00000288602'))
 
+def test_VEP():
+    print("id", rs.getVariantConsequencesByVariationID('human', 'COSM476'))
+    print("id", rs.getVariantConsequencesByVariationID('human', 'rs116035550'))
+    print("region_allele", rs.getVariantConsequencesByRegionAllele('human', '9:22125503-22125502:1', 'C'))
+    print("region_allele", rs.getVariantConsequencesByRegionAllele('human', '1:6524705:6524705', 'T'))
+    print("region_allele", rs.getVariantConsequencesByRegionAllele('human', '7:100318423-100321323:1', 'DUP'))
+    print("region_allele", rs.getVariantConsequencesByHGVS('human', 'AGT:c.803T>C'))
+    print("region_allele", rs.getVariantConsequencesByHGVS('human', 'ENST00000003084:c.1431_1433delTTC'))
+    print("region_allele", rs.getVariantConsequencesByHGVS('human', '9:g.22125504G>C'))
+
+
+test_VEP()
 test_Overlap()
 test_Ontology()
 test_Mapping()

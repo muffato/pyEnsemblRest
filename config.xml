@@ -53,6 +53,9 @@
 			<object name="Genotype" />
 			<object name="PopulationGenotype" />
 			<object name="PopulationAllele" />
+			<object name="VEPResult" />
+			<object name="Consequence" />
+			<object name="Variant" />
 		</namespace>
 	</objects>
 	<object_links>
@@ -86,6 +89,8 @@
 		<link src="variation.Variation" key="populations" target="variation.PopulationAllele" />
 		<link src="variation.Variation" key="genotypes" target="variation.Genotype" />
 		<link src="variation.Variation" key="mappings" target="variation.AlleleLocation" />
+		<link src="variation.VEPResult" key="colocated_variants" target="variation.Variant" />
+		<link src="variation.VEPResult" key="transcript_consequences" target="variation.Consequence" />
 	</object_links>
 	<endpoints>
 		<!-- archive.conf -->
@@ -154,9 +159,9 @@
 		<endpoint id="variation_id" name="getVariationByID" object="variation.Variation" />
 
 		<!-- vep.conf -->
-		<!--<endpoint id="vep_region_get" name="getVariantConsequencesByRegionAllele" object="" />-->
-		<!--<endpoint id="vep_id_get" name="getVariantConsequencesByVariationID" object="" />-->
-		<!--<endpoint id="vep_hgvs_get" name="getVariantConsequencesByHGVS" object="" />-->
+		<endpoint id="vep_region_get" name="getVariantConsequencesByRegionAllele" object="variation.VEPResult" />
+		<endpoint id="vep_id_get" name="getVariantConsequencesByVariationID" object="variation.VEPResult" />
+		<endpoint id="vep_hgvs_get" name="getVariantConsequencesByHGVS" object="variation.VEPResult" />
 
 	</endpoints>
 	<content_types>

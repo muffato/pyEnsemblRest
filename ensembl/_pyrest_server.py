@@ -995,6 +995,104 @@ Optional parameters:
         return self.build_rest_answer(ensembl.variation.Variation, ['json', 'xml'], ['genotypes', 'phenotypes', 'pops', 'population_genotypes'], None, 'variation/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
 
 
+    def getVariantConsequencesByRegionAllele(self, species, region, allele, **kwargs):
+        """Fetch variant consequences
+
+Return type: ensembl.variation.VEPResult
+Valid formats: json, xml
+HTTP endpoint: vep/:species/region/:region/:allele/
+
+Required parameters:
+- species (String)
+    Species name/alias
+- region (String)
+    Query region. We only support the current assembly
+- allele (String)
+    Variation allele
+
+Optional parameters:
+- hgvs (Boolean)
+    Include HGVS nomenclature based on Ensembl stable identifiers
+- ccds (Boolean)
+    Include CCDS transcript identifiers
+- numbers (Boolean)
+    Include affected exon and intron positions within the transcript
+- domains (Boolean)
+    Include names of overlapping protein domains
+- canonical (Boolean)
+    Include a flag indicating the canonical transcript for a gene
+- protein (Boolean)
+    Include Ensembl protein identifiers
+- xref_refseq (Boolean)
+    Include aligned RefSeq mRNA identifiers for transcript. NB: theRefSeq and Ensembl transcripts aligned in this way MAY NOT, AND FREQUENTLY WILL NOT, match exactly in sequence, exon structure and protein product
+"""
+        return self.build_rest_answer(ensembl.variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/region/{1}/{2}/'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region)), urllib.parse.quote(str(allele))), kwargs)
+
+
+    def getVariantConsequencesByVariationID(self, species, id, **kwargs):
+        """Fetch variant consequences based on a variation identifier
+
+Return type: ensembl.variation.VEPResult
+Valid formats: json, xml
+HTTP endpoint: vep/:species/id/:id
+
+Required parameters:
+- species (String)
+    Species name/alias
+- id (String)
+    Query ID. Supports dbSNP, COSMIC and HGMD identifiers
+
+Optional parameters:
+- hgvs (Boolean)
+    Include HGVS nomenclature based on Ensembl stable identifiers
+- ccds (Boolean)
+    Include CCDS transcript identifiers
+- numbers (Boolean)
+    Include affected exon and intron positions within the transcript
+- domains (Boolean)
+    Include names of overlapping protein domains
+- canonical (Boolean)
+    Include a flag indicating the canonical transcript for a gene
+- protein (Boolean)
+    Include Ensembl protein identifiers
+- xref_refseq (Boolean)
+    Include aligned RefSeq mRNA identifiers for transcript. NB: theRefSeq and Ensembl transcripts aligned in this way MAY NOT, AND FREQUENTLY WILL NOT, match exactly in sequence, exon structure and protein product
+"""
+        return self.build_rest_answer(ensembl.variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/id/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
+
+
+    def getVariantConsequencesByHGVS(self, species, hgvs_notation, **kwargs):
+        """Fetch variant consequences based on a HGVS notation
+
+Return type: ensembl.variation.VEPResult
+Valid formats: json, xml
+HTTP endpoint: vep/:species/hgvs/:hgvs_notation
+
+Required parameters:
+- species (String)
+    Species name/alias
+- hgvs_notation (String)
+    HGVS notation. May be genomic (g), coding (c) or protein (p), with reference to chromosome name, gene name, transcript ID or protein ID.
+
+Optional parameters:
+- hgvs (Boolean)
+    Include HGVS nomenclature based on Ensembl stable identifiers
+- ccds (Boolean)
+    Include CCDS transcript identifiers
+- numbers (Boolean)
+    Include affected exon and intron positions within the transcript
+- domains (Boolean)
+    Include names of overlapping protein domains
+- canonical (Boolean)
+    Include a flag indicating the canonical transcript for a gene
+- protein (Boolean)
+    Include Ensembl protein identifiers
+- xref_refseq (Boolean)
+    Include aligned RefSeq mRNA identifiers for transcript. NB: theRefSeq and Ensembl transcripts aligned in this way MAY NOT, AND FREQUENTLY WILL NOT, match exactly in sequence, exon structure and protein product
+"""
+        return self.build_rest_answer(ensembl.variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/hgvs/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(hgvs_notation))), kwargs)
+
+
 
 ensembl._pyrest_core.construction_rules[(ensembl.info.Assembly,'top_level_region')] = ensembl.info.SeqRegion
 ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyTerm,'children')] = ensembl.info.OntologyTerm
@@ -1026,6 +1124,8 @@ ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'population
 ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'populations')] = ensembl.variation.PopulationAllele
 ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'genotypes')] = ensembl.variation.Genotype
 ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'mappings')] = ensembl.variation.AlleleLocation
+ensembl._pyrest_core.construction_rules[(ensembl.variation.VEPResult,'colocated_variants')] = ensembl.variation.Variant
+ensembl._pyrest_core.construction_rules[(ensembl.variation.VEPResult,'transcript_consequences')] = ensembl.variation.Consequence
 
 EnsemblRestServer = RestServer(server_url = "http://rest.ensembl.org")
 EnsemblGenomesRestServer = RestServer(server_url = "http://test.rest.ensemblgenomes.org")
