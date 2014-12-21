@@ -24,11 +24,17 @@ class BaseObject(object):
             if ((self.__class__, k) not in construction_rules) and ((isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict))):
                 print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
             new_class = construction_rules.get( (self.__class__, k) )
-            # k is for the property with documentation, kk is for the actual value
-            kk = "_" + k
-            if k not in type(self).__dict__:
-                setattr(type(self), k, property(fget(kk), fset(kk), None, "Undocumented attribute (guessed from the downloaded objects)"))
-            self.__dict__[kk] = construct_object_from_json(v, new_class)
+            vv = construct_object_from_json(v, new_class)
+            self.__set_new_field(k, vv)
+
+    def __set_new_field(self, k, value, doc = None):
+        # k is for the property with documentation, kk is for the actual value
+        kk = "_" + k
+        if k not in type(self).__dict__:
+            if doc is None:
+                doc = "Undocumented attribute (guessed from the downloaded objects)"
+            setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
+        self.__dict__[kk] = value
 
     def __str__(self):
         return '{' + ',\n'.join(str(x) + ': ' + str(y) for (x,y) in self.__dict__.items()) + '}'
