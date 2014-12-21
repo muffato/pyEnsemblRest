@@ -4,7 +4,7 @@
 			<object name="Identifier" />
 			<object name="Sequence" />
 			<object name="Feature" />
-			<object name="Feature" />
+			<object name="GeneFeature" base_class="/Feature" />
 			<object name="TranscriptFeature" base_class="/Feature" />
 			<object name="TranslationFeature" base_class="/Feature" />
 			<object name="ExonFeature" base_class="/Feature" />
@@ -77,9 +77,7 @@
 		<link src="compara.NCBITaxon" key="children" target="compara.NCBITaxon" />
 		<link src="compara.NCBITaxon" key="parent" target="compara.NCBITaxon" />
 		<link src="compara.NCBITaxon" key="tags" target="/None" />
-		<link src="genome.Feature" key="Transcript" target="genome.TranscriptFeature" />
-		<link src="genome.Feature" key="Translation" target="genome.TranslationFeature" />
-		<link src="genome.Feature" key="Exon" target="genome.ExonFeature" />
+		<link src="genome.GeneFeature" key="Transcript" target="genome.TranscriptFeature" />
 		<link src="genome.TranscriptFeature" key="Translation" target="genome.TranslationFeature" />
 		<link src="genome.TranscriptFeature" key="Exon" target="genome.ExonFeature" />
 		<link src="genome.CoordMapping" key="mapped" target="genome.Location" />
@@ -119,8 +117,8 @@
 		<endpoint id="compara_species_sets" name="getSpeciesSetByComparaMethod" object="compara.MethodLinkSpeciesSet" />
 
 		<!-- lookup.conf -->
-		<endpoint id="lookup" name="lookupIdentifier" object="genome.Feature" />
-		<endpoint id="symbol_lookup" name="lookupGeneSymbol" object="genome.Feature" />
+		<endpoint id="lookup" name="lookupIdentifier" object="genome.feature_wrapper" />
+		<endpoint id="symbol_lookup" name="lookupGeneSymbol" object="genome.feature_wrapper" />
 
 		<!-- map.conf -->
 		<endpoint id="assembly_map" name="mapCoordinatesBetweenAssemblies" object="genome.CoordMapping" accessor="mappings" />
@@ -136,9 +134,9 @@
 		<endpoint id="ontology_ancestors_chart" name="getOntologyAncestorChart" object="dict_wrapper(ensembl.info.OntologyEntry)"/>
 
 		<!-- overlap.conf -->
-		<!--<endpoint id="overlap_region" name="getAllFeaturesOnRegion" object="" />-->
-		<!--<endpoint id="overlap_id" name="getAllFeaturesOnFeature" object="" />-->
-		<!--<endpoint id="overlap_translation" name="getAllFeaturesOnTranslation" object="" />-->
+		<endpoint id="overlap_id" name="getAllFeaturesOnFeatureID" object="genome.feature_wrapper" />
+		<endpoint id="overlap_region" name="getAllFeaturesOnRegion" object="genome.feature_wrapper" />
+		<endpoint id="overlap_translation" name="getAllFeaturesOnTranslation" object="genome.feature_wrapper" />
 
 		<!-- regulatory.conf -->
 		<endpoint id="regulatory_id" name="getRegulatoryFeatureByID" object="funcgen.RegulatoryFeature" />
