@@ -28,7 +28,9 @@
 			<object name="GeneTreeNodeConfidence" description="The confidence tags attached to a given gene-tree node" />
 			<object name="GeneTreeMember" description="Used in gene-tree leaves to show the actual protein that was used to build the tree" />
 			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
-			<object name="NCBITaxon" description="A node in the NCBI taxonomy" />
+			<object name="NCBITaxon" description="A node in the NCBI taxonomy" >
+				<property name="parent" description="Parent node in the taxonomy" getter="_tax_parent" />
+			</object>
 
 			<object name="MethodLinkSpeciesSet" />
 

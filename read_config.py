@@ -41,6 +41,11 @@ template_property = """
     #{0} = property(lambda self : getattr(self, "_{0}"), None, None, \"\"\"{1}\"\"\")
     {0} = property(lambda self : getattr(self, "_{0}"), lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
 """
+template_property_with_special_getter = """
+    #{0} = property({2}, None, None, \"\"\"{1}\"\"\")
+    {0} = property({2}, lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
+"""
+
 
 init_imports = []
 
@@ -59,14 +64,17 @@ for config_python_module in config_root.find('objects'):
         module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), correct_namespace(config_python_object.get('base_class', 'BaseObject')) ) )
         for prop in config_python_object:
             # prop is a <property> element
-            module_code.append( template_property.format( prop.get('name'), prop.get('description') ) )
+            t = template_property_with_special_getter if prop.get('getter') else template_property
+            module_code.append( t.format( prop.get('name'), prop.get('description'), prop.get('getter') ) )
     files[module_name] = "".join(module_code)
 
     # Adds the extra methods we want on those objects
     filename = 'template/%s.py' % module_name
     if os.path.isfile(filename):
         with open(filename, 'r') as f:
-            files[module_name] = files[module_name] + f.read()
+            c = files[module_name]
+            files[module_name] = f.read()
+            replace_placeholder_in_template(module_name, '__GENERATED_OBJECTS__', c)
 
 replace_placeholder_in_template('__init__', '__MODULE_IMPORTS__', init_imports, sep='\n')
 
