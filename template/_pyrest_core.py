@@ -37,8 +37,9 @@ class BaseObject(object):
             setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
         self.__dict__[kk] = value
 
+    # __repr__ defaults to something like '<ensembl.info.Ontology object at 0x7f2435e1bf98>'
     def __str__(self):
-        return '{' + ',\n'.join(str(x) + ': ' + str(y) for (x,y) in self.__dict__.items()) + '}'
+        return self.__class__.__module__ + '.' + self.__class__.__name__ + '(' + ', '.join(x[1:] + '=' + repr(y) for (x,y) in self.__dict__.items() if x != '_server') + ')'
 
 
 def construct_object_from_json(obj, new_class, rest_server):
