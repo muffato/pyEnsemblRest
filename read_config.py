@@ -198,11 +198,11 @@ def get_code_for_endpoint(e):
 
 ## Read all the other configurations and update _pyrest_server
 def build_and_replace(template_anchor, config_tag_name, expected_tag_name, callback, sep=",\n"):
-    config_all_rate_limiters = []
+    data = []
     for config_entry in config_root.find(config_tag_name):
         assert config_entry.tag == expected_tag_name
-        config_all_rate_limiters.append( callback(config_entry) )
-    replace_placeholder_in_template('_pyrest_server', template_anchor, config_all_rate_limiters, sep=sep)
+        data.append( callback(config_entry) )
+    replace_placeholder_in_template('_pyrest_server', template_anchor, data, sep=sep)
 
 
 
