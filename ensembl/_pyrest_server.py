@@ -1,9 +1,11 @@
 
 import collections
 import httplib2
+import math
 import json
 import time
 import urllib
+import sys
 
 import ensembl
 
@@ -35,44 +37,38 @@ class RestServerException(Exception):
 
 class RestServer:
 
-    # the key is the time interval (in seconds)
-    # the list stores the last x attempts
-    last_requests = {
-1: collections.deque([], 6-1),
-3600: collections.deque([], 11100-1)
-    }
-
     def __init__(self, server_url):
         self.server_url = server_url
-        self.http = httplib2.Http(".cache")
+        self.http = httplib2.Http()
+        self.last_headers = None
 
 
     def get_json_answer(self, url, content_type=None):
 
         # Rate limiter
-        for (i,l) in self.last_requests.items():
-            if len(l) == l.maxlen:
-                curr_time = time.time()
-                oldest_time = l[0]
-                if curr_time-oldest_time < i:
-                    #print "sleep (%d)" % i, i - (curr_time-oldest_time)
-                    time.sleep(i - (curr_time-oldest_time))
+        # FIXME: check whether it is ever used and delete otherwise
+        if self.last_headers is not None:
+            time_remaining = int(self.last_headers['x-ratelimit-reset'])
+            requests_remaining = int(self.last_headers['x-ratelimit-remaining'])
+            t = time_remaining * math.exp( -requests_remaining / time_remaining )
+            if t > .001:
+                print("sleeping", t, "seconds before calling", self.server_url)
+                time.sleep(t)
 
-        curr_time = time.time()
-        for (i,l) in self.last_requests.items():
-            l.append(time.time())
-            while l[0] < curr_time-i:
-                #print "clear", i
-                l.popleft()
-        #print self.last_requests
-        #print content_type
-        print("getting "+self.server_url+"/"+url+" with the content_type:"+content_type)
-        resp, content = self.http.request(self.server_url+"/"+url, method="GET", headers={"Content-Type":content_type})
+        #print("getting "+self.server_url+"/"+url+" with the content_type:"+content_type)
+        while True:
+            resp, content = self.http.request(self.server_url+"/"+url, method="GET", headers={"Content-Type":content_type})
+            if resp.status == 429:
+                print(self.server_url, "asked to wait", resp['retry-after'], "seconds", file=sys.stderr)
+                time.sleep(float(resp['retry-after']))
+            else:
+                break
 
         if resp.status not in return_codes:
             raise RestServerException( "Unknown response code: %d" % resp.status, resp, content )
         if return_codes[resp.status][0] != "OK":
             raise RestServerException( "Invalid response code: %s (%d)\n%s" % (return_codes[resp.status][0], resp.status, return_codes[resp.status][1]), resp, content )
+        self.last_headers = resp
 
         return content.decode('utf-8')
 
