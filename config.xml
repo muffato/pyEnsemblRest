@@ -175,10 +175,6 @@
 		<content_type alias="yaml" mime="text/x-yaml" />
 		<content_type alias="text" mime="text/plain" />
 	</content_types>
-	<rate_limiters>
-		<rate_limiter period='1' max_requests='6' />
-		<rate_limiter period='3600' max_requests='11100' />
-	</rate_limiters>
 	<response_codes>
 		<response_code code="200" title="OK" description="Request was a success" />
 		<response_code code="400" title="Bad Request" description="Occurs during exceptional circumstances such as the service is unable to find an ID" />

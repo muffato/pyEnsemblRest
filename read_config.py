@@ -224,11 +224,6 @@ build_and_replace('__RESPONSE_CODES__', 'response_codes', 'response_code',
         lambda c: '%s: ("%s", "%s")' % (c.get('code'), c.get('title'), c.get('description'))
 )
 
-# rate limiters
-build_and_replace('__RATE_LIMITERS__', 'rate_limiters', 'rate_limiter',
-        lambda c: '%s: collections.deque([], %s-1)' % (c.get('period'), c.get('max_requests'))
-)
-
 
 ## Write down all the files to the disk
 
