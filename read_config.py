@@ -37,6 +37,10 @@ class {0}({2}):
     \"\"\"{1}\"\"\"
 """
 
+template_construction_rules = """
+%s._construction_rules = {%s}
+"""
+
 template_property = """
     #{0} = property(lambda self : getattr(self, "_{0}"), None, None, \"\"\"{1}\"\"\")
     {0} = property(lambda self : getattr(self, "_{0}"), lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
@@ -62,10 +66,15 @@ for config_python_module in config_root.find('objects'):
     for config_python_object in config_python_module:
         # config_python_object is a <object> element
         module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), correct_namespace(config_python_object.get('base_class', 'BaseObject')) ) )
+        construction_rules = {}
         for prop in config_python_object:
             # prop is a <property> element
             t = template_property_with_special_getter if prop.get('getter') else template_property
             module_code.append( t.format( prop.get('name'), prop.get('description'), prop.get('getter') ) )
+            if prop.get('object'):
+                construction_rules[ prop.get('name') ] = correct_namespace(prop.get('object'))
+        if construction_rules:
+            module_code.append( template_construction_rules % (config_python_object.get('name'), ', '.join('"%s":%s' % x for x in construction_rules.items())) )
     files[module_name] = "".join(module_code)
 
     # Adds the extra methods we want on those objects

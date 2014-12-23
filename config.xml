@@ -1,7 +1,7 @@
 <pyrest>
 	<objects>
 		<namespace name="genome" >
-			<object name="Identifier" />
+			<object name="Identifier" /> <!-- only used for GeneTreeMember -->
 			<object name="Sequence" />
 			<object name="Feature" />
 			<object name="GeneFeature" base_class="/Feature" />
@@ -23,15 +23,32 @@
 		</namespace>
 		<namespace name="compara" >
 
-			<object name="GeneTree" description="Global object for gene-trees" >
-				<property name="id" description="GeneTree stable identifier" />
-			</object>
-			<object name="GeneTreeNode" description="Node in a gene-tree" />
-			<object name="GeneTreeNodeConfidence" description="The confidence tags attached to a given gene-tree node" />
-			<object name="GeneTreeMember" description="Used in gene-tree leaves to show the actual protein that was used to build the tree" />
-			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
 			<object name="NCBITaxon" description="A node in the NCBI taxonomy" >
-				<property name="parent" description="Parent node in the taxonomy" getter="_tax_parent" />
+				<property name="parent" description="Parent node in the taxonomy" getter="_tax_parent" object="/NCBITaxon" />
+				<property name="children" description="Child nodes in the taxonomy" getter="_tax_children" object="/NCBITaxon" />
+				<property name="tags" description="Additionnal tags" object="/None" />
+			</object>
+
+			<object name="GeneTreeMember" description="A leaf of a gene-tree, i.e. a protein / gene" >
+				<property name="id" description="Protein / transcript identifier" object="genome.Identifier" />
+				<property name="mol_seq" description="DNA / protein sequence" object="genome.Sequence" />
+			</object>
+
+			<!-- useless -->
+			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
+
+			<object name="GeneTreeNode" description="Node in a gene-tree" >
+				<property name="taxonomy" description="Taxonomy annotation of this node" object="/NCBITaxon" />
+				<property name="children" description="Child nodes in the gene-tree" object="/GeneTreeNode" />
+				<property name="confidence" description="The confidence tags attached to a given gene-tree node" object="/None" />
+				<property name="id" description="Gene identifier (only for leaves)" object="genome.Identifier" />
+				<property name="events" description="The evolutionary event that took place at this node" object="/GeneTreeEvent" />
+				<property name="sequence" description="GeneTreeMember (only for leaves)" object="/GeneTreeMember" />
+			</object>
+
+			<object name="GeneTree" description="Global object for gene-trees" >
+				<property name="tree" description="root node" object="/GeneTreeNode" />
+				<property name="id" description="GeneTree stable identifier" />
 			</object>
 
 			<object name="MethodLinkSpeciesSet" />
@@ -64,22 +81,10 @@
 		<link src="info.OntologyTerm" key="parents" target="info.OntologyTerm" />
 		<link src="info.OntologyEntry" key="is_a" target="info.OntologyTerm" />
 		<link src="info.OntologyEntry" key="term" target="info.OntologyTerm" />
-		<link src="compara.GeneTree" key="tree" target="compara.GeneTreeNode" />
-		<link src="compara.GeneTreeNode" key="taxonomy" target="compara.NCBITaxon" />
-		<link src="compara.GeneTreeNode" key="events" target="compara.GeneTreeEvent" />
-		<link src="compara.GeneTreeNode" key="confidence" target="compara.GeneTreeNodeConfidence" />
-		<link src="compara.GeneTreeNode" key="children" target="compara.GeneTreeNode" />
-		<link src="compara.GeneTreeNode" key="sequence" target="compara.GeneTreeMember" />
-		<link src="compara.GeneTreeNode" key="id" target="genome.Identifier" />
-		<link src="compara.GeneTreeMember" key="id" target="genome.Identifier" />
-		<link src="compara.GeneTreeMember" key="mol_seq" target="genome.Sequence" />
 		<link src="compara.HomologyGroup" key="homologies" target="compara.HomologyPair" />
 		<link src="compara.HomologyPair" key="target" target="compara.Homolog" />
 		<link src="compara.HomologyPair" key="source" target="compara.Homolog" />
 		<link src="compara.GenomicAlignment" key="alignments" target="compara.GenomicAlignmentEntry" />
-		<link src="compara.NCBITaxon" key="children" target="compara.NCBITaxon" />
-		<link src="compara.NCBITaxon" key="parent" target="compara.NCBITaxon" />
-		<link src="compara.NCBITaxon" key="tags" target="/None" />
 		<link src="genome.GeneFeature" key="Transcript" target="genome.TranscriptFeature" />
 		<link src="genome.TranscriptFeature" key="Translation" target="genome.TranslationFeature" />
 		<link src="genome.TranscriptFeature" key="Exon" target="genome.ExonFeature" />

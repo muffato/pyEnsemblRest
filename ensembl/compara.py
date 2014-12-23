@@ -8,32 +8,82 @@ def _tax_parent(self):
         self.__dict__['_parent'] = copy.__dict__['_parent']
     return self.__dict__['_parent']
 
+def _tax_children(self):
+    if self.leaf:
+        return []
+    if '_children' not in self.__dict__:
+        if not hasattr(self, '_id'):
+            print("'id' is not defined, cannot fetch the parent node")
+            return []
+        copy = self.server.getTaxonomyEntryByID(self.id)
+        self.__dict__['_children'] = copy.__dict__['_children']
+    return self.__dict__['_children']
+
+
 
 import ensembl
-
-class GeneTree(ensembl.BaseObject):
-    """Global object for gene-trees"""
-
-    #id = property(lambda self : getattr(self, "_id"), None, None, """GeneTree stable identifier""")
-    id = property(lambda self : getattr(self, "_id"), lambda self, val : setattr(self, "_id", val), None, """GeneTree stable identifier""")
-
-class GeneTreeNode(ensembl.BaseObject):
-    """Node in a gene-tree"""
-
-class GeneTreeNodeConfidence(ensembl.BaseObject):
-    """The confidence tags attached to a given gene-tree node"""
-
-class GeneTreeMember(ensembl.BaseObject):
-    """Used in gene-tree leaves to show the actual protein that was used to build the tree"""
-
-class GeneTreeEvent(ensembl.BaseObject):
-    """The evolutionary event that took place at this node of the tree"""
 
 class NCBITaxon(ensembl.BaseObject):
     """A node in the NCBI taxonomy"""
 
     #parent = property(_tax_parent, None, None, """Parent node in the taxonomy""")
     parent = property(_tax_parent, lambda self, val : setattr(self, "_parent", val), None, """Parent node in the taxonomy""")
+
+    #children = property(_tax_children, None, None, """Child nodes in the taxonomy""")
+    children = property(_tax_children, lambda self, val : setattr(self, "_children", val), None, """Child nodes in the taxonomy""")
+
+    #tags = property(lambda self : getattr(self, "_tags"), None, None, """Additionnal tags""")
+    tags = property(lambda self : getattr(self, "_tags"), lambda self, val : setattr(self, "_tags", val), None, """Additionnal tags""")
+
+NCBITaxon._construction_rules = {"parent":NCBITaxon, "tags":None, "children":NCBITaxon}
+
+class GeneTreeMember(ensembl.BaseObject):
+    """A leaf of a gene-tree, i.e. a protein / gene"""
+
+    #id = property(lambda self : getattr(self, "_id"), None, None, """Protein / transcript identifier""")
+    id = property(lambda self : getattr(self, "_id"), lambda self, val : setattr(self, "_id", val), None, """Protein / transcript identifier""")
+
+    #mol_seq = property(lambda self : getattr(self, "_mol_seq"), None, None, """DNA / protein sequence""")
+    mol_seq = property(lambda self : getattr(self, "_mol_seq"), lambda self, val : setattr(self, "_mol_seq", val), None, """DNA / protein sequence""")
+
+GeneTreeMember._construction_rules = {"id":ensembl.genome.Identifier, "mol_seq":ensembl.genome.Sequence}
+
+class GeneTreeEvent(ensembl.BaseObject):
+    """The evolutionary event that took place at this node of the tree"""
+
+class GeneTreeNode(ensembl.BaseObject):
+    """Node in a gene-tree"""
+
+    #taxonomy = property(lambda self : getattr(self, "_taxonomy"), None, None, """Taxonomy annotation of this node""")
+    taxonomy = property(lambda self : getattr(self, "_taxonomy"), lambda self, val : setattr(self, "_taxonomy", val), None, """Taxonomy annotation of this node""")
+
+    #children = property(lambda self : getattr(self, "_children"), None, None, """Child nodes in the gene-tree""")
+    children = property(lambda self : getattr(self, "_children"), lambda self, val : setattr(self, "_children", val), None, """Child nodes in the gene-tree""")
+
+    #confidence = property(lambda self : getattr(self, "_confidence"), None, None, """The confidence tags attached to a given gene-tree node""")
+    confidence = property(lambda self : getattr(self, "_confidence"), lambda self, val : setattr(self, "_confidence", val), None, """The confidence tags attached to a given gene-tree node""")
+
+    #id = property(lambda self : getattr(self, "_id"), None, None, """Gene identifier (only for leaves)""")
+    id = property(lambda self : getattr(self, "_id"), lambda self, val : setattr(self, "_id", val), None, """Gene identifier (only for leaves)""")
+
+    #events = property(lambda self : getattr(self, "_events"), None, None, """The evolutionary event that took place at this node""")
+    events = property(lambda self : getattr(self, "_events"), lambda self, val : setattr(self, "_events", val), None, """The evolutionary event that took place at this node""")
+
+    #sequence = property(lambda self : getattr(self, "_sequence"), None, None, """GeneTreeMember (only for leaves)""")
+    sequence = property(lambda self : getattr(self, "_sequence"), lambda self, val : setattr(self, "_sequence", val), None, """GeneTreeMember (only for leaves)""")
+
+GeneTreeNode._construction_rules = {"sequence":GeneTreeMember, "events":GeneTreeEvent, "children":GeneTreeNode, "id":ensembl.genome.Identifier, "taxonomy":NCBITaxon, "confidence":None}
+
+class GeneTree(ensembl.BaseObject):
+    """Global object for gene-trees"""
+
+    #tree = property(lambda self : getattr(self, "_tree"), None, None, """root node""")
+    tree = property(lambda self : getattr(self, "_tree"), lambda self, val : setattr(self, "_tree", val), None, """root node""")
+
+    #id = property(lambda self : getattr(self, "_id"), None, None, """GeneTree stable identifier""")
+    id = property(lambda self : getattr(self, "_id"), lambda self, val : setattr(self, "_id", val), None, """GeneTree stable identifier""")
+
+GeneTree._construction_rules = {"tree":GeneTreeNode}
 
 class MethodLinkSpeciesSet(ensembl.BaseObject):
     """"""
@@ -67,7 +117,18 @@ def _gtn_get_all_leaves(self):
 
 setattr(GeneTreeNode, 'get_all_leaves', _gtn_get_all_leaves)
 
+def _gtn_get_all_nodes(self):
+    """
+        Get all the nodes in this sub-tree, including the root
+    """
+    if '_children' not in self.__dict__:
+        return [self]
+    l = [self]
+    for n in self.children:
+        l.extend(n.get_all_nodes())
+    return l
 
+setattr(GeneTreeNode, 'get_all_nodes', _gtn_get_all_nodes)
 
 def _gt_get_all_leaves(self):
     """
@@ -76,5 +137,13 @@ def _gt_get_all_leaves(self):
     return self.tree.get_all_leaves()
 
 setattr(GeneTree, 'get_all_leaves', _gt_get_all_leaves)
+
+def _gt_get_all_nodes(self):
+    """
+        Get all the nodes in this tree
+    """
+    return self.tree.get_all_nodes()
+
+setattr(GeneTree, 'get_all_nodes', _gt_get_all_nodes)
 
 

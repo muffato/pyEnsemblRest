@@ -23,10 +23,16 @@ class BaseObject(object):
     def __init__(self, adict, rest_server):
         self.__set_new_field('server', rest_server, 'REST server that was used to fetch this object')
         for k, v in adict.items():
-            # This test is only needed in development mode
-            if ((self.__class__, k) not in construction_rules) and ((isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict))):
-                print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
-            new_class = construction_rules.get( (self.__class__, k) )
+            new_class = None
+            if (isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict)):
+                if '_construction_rules' in self.__class__.__dict__ and k in self._construction_rules:
+                    new_class = self._construction_rules[k]
+                    #print("new system:", k, new_class)
+                elif (self.__class__, k) in construction_rules:
+                    new_class = construction_rules[ (self.__class__, k) ]
+                else:
+                    # This test is only needed in development mode
+                    print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
             vv = construct_object_from_json(v, new_class, rest_server)
             self.__set_new_field(k, vv)
 
