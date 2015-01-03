@@ -7,6 +7,7 @@ import time
 import urllib
 import sys
 
+from . import _pyrest_core
 import ensembl
 
 content_types = {
@@ -102,7 +103,7 @@ class RestServer:
         j = json.loads(content)
         if accessor is not None:
             j = j[accessor]
-        return ensembl.construct_object_from_json(j, new_object, self)
+        return _pyrest_core.construct_object_from_json(j, new_object, self)
 
 
     def getArchiveEntry(self, id, **kwargs):
