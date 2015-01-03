@@ -4,67 +4,67 @@
 			<object name="Identifier" /> <!-- only used for GeneTreeMember -->
 			<object name="Sequence" />
 			<object name="Feature" />
-			<object name="ExonFeature" base_class="/Feature" />
-			<object name="TranslationFeature" base_class="/Feature" />
-			<object name="TranscriptFeature" base_class="/Feature" >
-				<property name="Translation" object="/TranslationFeature" />
-				<property name="Exon" object="/ExonFeature" />
+			<object name="ExonFeature" base_class="Feature" />
+			<object name="TranslationFeature" base_class="Feature" />
+			<object name="TranscriptFeature" base_class="Feature" >
+				<property name="Translation" object="TranslationFeature" />
+				<property name="Exon" object="ExonFeature" />
 			</object>
-			<object name="GeneFeature" base_class="/Feature" >
-				<property name="Transcript" object="/TranscriptFeature" />
+			<object name="GeneFeature" base_class="Feature" >
+				<property name="Transcript" object="TranscriptFeature" />
 			</object>
 			<object name="Location" />
 			<object name="CoordMapping" >
-				<property name="mapped" object="/Location" />
-				<property name="original" object="/Location" />
+				<property name="mapped" object="Location" />
+				<property name="original" object="Location" />
 			</object>
 		</namespace>
 		<namespace name="info" >
 			<object name="SeqRegion" />
 			<object name="Assembly" >
-				<property name="top_level_region" object="/SeqRegion" />
+				<property name="top_level_region" object="SeqRegion" />
 			</object>
 			<object name="ArchiveEntry" />
 			<object name="Species" />
 			<object name="ExternalDatabase" />
 			<object name="Biotype" />
 			<object name="OntologyTerm" >
-				<property name="children" object="/OntologyTerm" />
-				<property name="parents" object="/OntologyTerm" />
+				<property name="children" object="OntologyTerm" />
+				<property name="parents" object="OntologyTerm" />
 			</object>
 			<object name="OntologyEntry" >
-				<property name="is_a" object="/OntologyTerm" />
-				<property name="term" object="/OntologyTerm" />
+				<property name="is_a" object="OntologyTerm" />
+				<property name="term" object="OntologyTerm" />
 			</object>
 		</namespace>
 		<namespace name="compara" >
 
 			<object name="NCBITaxon" description="A node in the NCBI taxonomy" >
-				<property name="parent" description="Parent node in the taxonomy" getter="_tax_parent" object="/NCBITaxon" />
-				<property name="children" description="Child nodes in the taxonomy" getter="_tax_children" object="/NCBITaxon" />
-				<property name="tags" description="Additionnal tags" object="/None" />
+				<property name="parent" description="Parent node in the taxonomy" getter="_tax_parent" object="NCBITaxon" />
+				<property name="children" description="Child nodes in the taxonomy" getter="_tax_children" object="NCBITaxon" />
+				<property name="tags" description="Additionnal tags" object="None" />
 			</object>
 
 			<!-- Gene trees -->
 			<object name="GeneTreeMember" description="A leaf of a gene-tree, i.e. a protein / gene" >
-				<property name="id" description="Protein / transcript identifier" object="genome.Identifier" />
-				<property name="mol_seq" description="DNA / protein sequence" object="genome.Sequence" />
+				<property name="id" description="Protein / transcript identifier" object=".genome.Identifier" />
+				<property name="mol_seq" description="DNA / protein sequence" object=".genome.Sequence" />
 			</object>
 
 			<!-- useless -->
 			<object name="GeneTreeEvent" description="The evolutionary event that took place at this node of the tree" />
 
 			<object name="GeneTreeNode" description="Node in a gene-tree" >
-				<property name="taxonomy" description="Taxonomy annotation of this node" object="/NCBITaxon" />
-				<property name="children" description="Child nodes in the gene-tree" object="/GeneTreeNode" />
-				<property name="confidence" description="The confidence tags attached to a given gene-tree node" object="/None" />
-				<property name="id" description="Gene identifier (only for leaves)" object="genome.Identifier" />
-				<property name="events" description="The evolutionary event that took place at this node" object="/GeneTreeEvent" />
-				<property name="sequence" description="GeneTreeMember (only for leaves)" object="/GeneTreeMember" />
+				<property name="taxonomy" description="Taxonomy annotation of this node" object="NCBITaxon" />
+				<property name="children" description="Child nodes in the gene-tree" object="GeneTreeNode" />
+				<property name="confidence" description="The confidence tags attached to a given gene-tree node" object="None" />
+				<property name="id" description="Gene identifier (only for leaves)" object=".genome.Identifier" />
+				<property name="events" description="The evolutionary event that took place at this node" object="GeneTreeEvent" />
+				<property name="sequence" description="GeneTreeMember (only for leaves)" object="GeneTreeMember" />
 			</object>
 
 			<object name="GeneTree" description="Global object for gene-trees" >
-				<property name="tree" description="root node" object="/GeneTreeNode" />
+				<property name="tree" description="root node" object="GeneTreeNode" />
 				<property name="id" description="GeneTree stable identifier" />
 			</object>
 
@@ -73,17 +73,17 @@
 			<!-- Homologies -->
 			<object name="Homolog" />
 			<object name="HomologyPair" description="Homology pair" >
-				<property name="target" description="Paralog of the query gene / Ortholog in the other species" object="/Homolog" />
-				<property name="source" description="Query gene" object="/Homolog" />
+				<property name="target" description="Paralog of the query gene / Ortholog in the other species" object="Homolog" />
+				<property name="source" description="Query gene" object="Homolog" />
 			</object>
 			<object name="HomologyGroup" description="Group of multiple homology-pairs" >
-				<property name="homologies" description="All the homology pairs" object="/HomologyPair" />
+				<property name="homologies" description="All the homology pairs" object="HomologyPair" />
 			</object>
 
 			<!-- Genomic alignments -->
 			<object name="GenomicAlignmentEntry" />
 			<object name="GenomicAlignment" >
-				<property name="alignments" descriptions="All the alignment-bloks for this query region" object="/GenomicAlignmentEntry" />
+				<property name="alignments" descriptions="All the alignment-bloks for this query region" object="GenomicAlignmentEntry" />
 			</object>
 
 		</namespace>
@@ -92,22 +92,22 @@
 		</namespace>
 
 		<namespace name="variation">
-			<object name="AlleleLocation" base_class="genome.Location" />
+			<object name="AlleleLocation" base_class=".genome.Location" />
 			<object name="Genotype" />
 			<object name="PopulationGenotype" />
 			<object name="PopulationAllele" />
 			<object name="Variation" >
-				<property name="population_genotypes" object="/PopulationGenotype" />
-				<property name="populations" object="/PopulationAllele" />
-				<property name="genotypes" object="/Genotype" />
-				<property name="mappings" object="/AlleleLocation" />
+				<property name="population_genotypes" object="PopulationGenotype" />
+				<property name="populations" object="PopulationAllele" />
+				<property name="genotypes" object="Genotype" />
+				<property name="mappings" object="AlleleLocation" />
 			</object>
 
 			<object name="Consequence" />
 			<object name="Variant" />
 			<object name="VEPResult" >
-				<property name="colocated_variants" object="/Variant" />
-				<property name="transcript_consequences" object="/Consequence" />
+				<property name="colocated_variants" object="Variant" />
+				<property name="transcript_consequences" object="Consequence" />
 			</object>
 		</namespace>
 	</objects>

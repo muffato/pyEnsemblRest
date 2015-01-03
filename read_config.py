@@ -25,7 +25,7 @@ def replace_placeholder_in_template(filename, key, content_list, sep=''):
 
 
 def correct_namespace(n):
-    return n[1:] if n.startswith('/') else 'ensembl.' + n
+    return 'ensembl' + n if n.startswith('.') else n
 
 ## Generate all the modules with basic object definition
 
@@ -65,7 +65,7 @@ for config_python_module in config_root.find('objects'):
     module_code = [ template_module_header, "\n" ]
     for config_python_object in config_python_module:
         # config_python_object is a <object> element
-        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), correct_namespace(config_python_object.get('base_class', 'BaseObject')) ) )
+        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), correct_namespace(config_python_object.get('base_class', '.BaseObject')) ) )
         construction_rules = {}
         for prop in config_python_object:
             # prop is a <property> element
