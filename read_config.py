@@ -206,12 +206,12 @@ def get_code_for_endpoint(e):
 
 
 ## Read all the other configurations and update _pyrest_server
-def build_and_replace(template_anchor, config_tag_name, expected_tag_name, callback, sep=",\n"):
+def build_and_replace(template_anchor, config_tag_name, expected_tag_name, callback, sep=",\n", filename="_pyrest_server"):
     data = []
     for config_entry in config_root.find(config_tag_name):
         assert config_entry.tag == expected_tag_name
         data.append( callback(config_entry) )
-    replace_placeholder_in_template('_pyrest_server', template_anchor, data, sep=sep)
+    replace_placeholder_in_template(filename, template_anchor, data, sep=sep)
 
 
 
@@ -222,6 +222,13 @@ build_and_replace('__ENDPOINTS_METHODS__', 'endpoints', 'endpoint', get_code_for
 build_and_replace('__CONTENT_TYPES__', 'content_types', 'content_type',
         lambda c: '"%s": "%s"' % (c.get('alias'), c.get('mime'))
 )
+
+# instances
+build_and_replace('__REST_INSTANCES__', 'instances', 'instance',
+        lambda c: '%s = _pyrest_server.RestServer(server_url = "%s")' % (c.get('name'), c.get('url')),
+        sep="\n", filename="__init__"
+)
+build_and_replace('__REST_INSTANCE_NAMES__', 'instances', 'instance', lambda c: "__all__.append('%s')" % c.get('name'), sep="\n", filename="__init__")
 
 # response codes
 build_and_replace('__RESPONSE_CODES__', 'response_codes', 'response_code',

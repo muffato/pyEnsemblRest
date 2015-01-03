@@ -184,6 +184,10 @@
 		<endpoint id="vep_hgvs_get" name="getVariantConsequencesByHGVS" object="variation.VEPResult" />
 
 	</endpoints>
+	<instances>
+		<instance name="EnsemblRestServer" url="http://rest.ensembl.org" />
+		<instance name="EnsemblGenomesRestServer" url="http://test.rest.ensemblgenomes.org" />
+	</instances>
 	<content_types>
 		<content_type alias="bed" mime="text/x-bed" />
 		<content_type alias="fasta" mime="text/x-fasta" />

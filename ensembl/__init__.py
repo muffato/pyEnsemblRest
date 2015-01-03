@@ -21,6 +21,9 @@ from ._pyrest_server import RestServer
 EnsemblRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensembl.org")
 EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://test.rest.ensemblgenomes.org")
 
-__all__ = ['EnsemblRestServer', 'EnsemblGenomesRestServer', 'RestServer']
+__all__ = [ 'RestServer' ]
+
+__all__.append('EnsemblRestServer')
+__all__.append('EnsemblGenomesRestServer')
 
 

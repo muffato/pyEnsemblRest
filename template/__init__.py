@@ -14,8 +14,9 @@ from ensembl._pyrest_core import BaseObject, dict_wrapper
 from . import _pyrest_server
 from ._pyrest_server import RestServer
 
-EnsemblRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensembl.org")
-EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://test.rest.ensemblgenomes.org")
+#__REST_INSTANCES__
 
-__all__ = ['EnsemblRestServer', 'EnsemblGenomesRestServer', 'RestServer']
+__all__ = [ 'RestServer' ]
+
+#__REST_INSTANCE_NAMES__
 
