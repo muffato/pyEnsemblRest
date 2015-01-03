@@ -74,7 +74,7 @@ for config_python_module in config_root.find('objects'):
             if prop.get('object'):
                 construction_rules[ prop.get('name') ] = correct_namespace(prop.get('object'))
         if construction_rules:
-            module_code.append( template_construction_rules % (config_python_object.get('name'), ', '.join('"%s":%s' % x for x in construction_rules.items())) )
+            module_code.append( template_construction_rules % (config_python_object.get('name'), ', '.join('"%s":%s' % x for x in sorted(construction_rules.items()))) )
     files[module_name] = "".join(module_code)
 
     # Adds the extra methods we want on those objects

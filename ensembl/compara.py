@@ -46,7 +46,7 @@ class GeneTreeMember(ensembl.BaseObject):
     #mol_seq = property(lambda self : getattr(self, "_mol_seq"), None, None, """DNA / protein sequence""")
     mol_seq = property(lambda self : getattr(self, "_mol_seq"), lambda self, val : setattr(self, "_mol_seq", val), None, """DNA / protein sequence""")
 
-GeneTreeMember._construction_rules = {"mol_seq":ensembl.genome.Sequence, "id":ensembl.genome.Identifier}
+GeneTreeMember._construction_rules = {"id":ensembl.genome.Identifier, "mol_seq":ensembl.genome.Sequence}
 
 class GeneTreeEvent(ensembl.BaseObject):
     """The evolutionary event that took place at this node of the tree"""
@@ -72,7 +72,7 @@ class GeneTreeNode(ensembl.BaseObject):
     #sequence = property(lambda self : getattr(self, "_sequence"), None, None, """GeneTreeMember (only for leaves)""")
     sequence = property(lambda self : getattr(self, "_sequence"), lambda self, val : setattr(self, "_sequence", val), None, """GeneTreeMember (only for leaves)""")
 
-GeneTreeNode._construction_rules = {"taxonomy":NCBITaxon, "sequence":GeneTreeMember, "events":GeneTreeEvent, "children":GeneTreeNode, "id":ensembl.genome.Identifier, "confidence":None}
+GeneTreeNode._construction_rules = {"children":GeneTreeNode, "confidence":None, "events":GeneTreeEvent, "id":ensembl.genome.Identifier, "sequence":GeneTreeMember, "taxonomy":NCBITaxon}
 
 class GeneTree(ensembl.BaseObject):
     """Global object for gene-trees"""

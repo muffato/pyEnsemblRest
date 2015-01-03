@@ -27,7 +27,7 @@ class Variation(ensembl.BaseObject):
     #mappings = property(lambda self : getattr(self, "_mappings"), None, None, """None""")
     mappings = property(lambda self : getattr(self, "_mappings"), lambda self, val : setattr(self, "_mappings", val), None, """None""")
 
-Variation._construction_rules = {"population_genotypes":PopulationGenotype, "genotypes":Genotype, "mappings":AlleleLocation, "populations":PopulationAllele}
+Variation._construction_rules = {"genotypes":Genotype, "mappings":AlleleLocation, "population_genotypes":PopulationGenotype, "populations":PopulationAllele}
 
 class Consequence(ensembl.BaseObject):
     """"""
@@ -44,5 +44,5 @@ class VEPResult(ensembl.BaseObject):
     #transcript_consequences = property(lambda self : getattr(self, "_transcript_consequences"), None, None, """None""")
     transcript_consequences = property(lambda self : getattr(self, "_transcript_consequences"), lambda self, val : setattr(self, "_transcript_consequences", val), None, """None""")
 
-VEPResult._construction_rules = {"transcript_consequences":Consequence, "colocated_variants":Variant}
+VEPResult._construction_rules = {"colocated_variants":Variant, "transcript_consequences":Consequence}
 

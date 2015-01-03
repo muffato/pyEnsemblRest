@@ -25,7 +25,7 @@ class TranscriptFeature(Feature):
     #Exon = property(lambda self : getattr(self, "_Exon"), None, None, """None""")
     Exon = property(lambda self : getattr(self, "_Exon"), lambda self, val : setattr(self, "_Exon", val), None, """None""")
 
-TranscriptFeature._construction_rules = {"Translation":TranslationFeature, "Exon":ExonFeature}
+TranscriptFeature._construction_rules = {"Exon":ExonFeature, "Translation":TranslationFeature}
 
 class GeneFeature(Feature):
     """"""
