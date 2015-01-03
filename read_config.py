@@ -29,7 +29,7 @@ def correct_namespace(n):
 
 ## Generate all the modules with basic object definition
 
-template_init_import_module = 'import ensembl.%s'
+template_init_import_module = 'from . import %s'
 template_module_header = 'import ensembl'
 
 template_module_object = """

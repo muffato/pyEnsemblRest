@@ -6,16 +6,16 @@ RestServer is a class that knows how to communicate with the Ensembl REST server
 EnsemblRestServer and EnsemblGenomesRestServer are two instances of it, set up to access the Ensembl and Ensembl Genomes servers (respectively)
 """
 
-import ensembl._pyrest_core
+from . import _pyrest_core
 from ensembl._pyrest_core import BaseObject, construct_object_from_json, dict_wrapper
 
-import ensembl.genome
-import ensembl.info
-import ensembl.compara
-import ensembl.funcgen
-import ensembl.variation
+from . import genome
+from . import info
+from . import compara
+from . import funcgen
+from . import variation
 
-import ensembl._pyrest_server
+from . import _pyrest_server
 from ensembl._pyrest_server import RestServer, EnsemblRestServer, EnsemblGenomesRestServer
 
 __all__ = ['EnsemblRestServer', 'EnsemblGenomesRestServer', 'RestServer']
