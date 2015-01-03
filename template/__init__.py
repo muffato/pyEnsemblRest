@@ -12,7 +12,10 @@ from ensembl._pyrest_core import BaseObject, dict_wrapper
 #__MODULE_IMPORTS__
 
 from . import _pyrest_server
-from ensembl._pyrest_server import RestServer, EnsemblRestServer, EnsemblGenomesRestServer
+from ._pyrest_server import RestServer
+
+EnsemblRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensembl.org")
+EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://test.rest.ensemblgenomes.org")
 
 __all__ = ['EnsemblRestServer', 'EnsemblGenomesRestServer', 'RestServer']
 
