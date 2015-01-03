@@ -1,9 +1,6 @@
 
 import sys
 
-# A dictionnary of (class, key): class
-construction_rules = {}
-
 def dict_wrapper(new_type):
     return lambda d, r : {k: new_type(v, r) for (k,v) in d.items()}
 
@@ -25,11 +22,9 @@ class BaseObject(object):
         for k, v in adict.items():
             new_class = None
             if (isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict)):
-                if '_construction_rules' in self.__class__.__dict__ and k in self._construction_rules:
+                if k in self._construction_rules:
                     new_class = self._construction_rules[k]
                     #print("new system:", k, new_class)
-                elif (self.__class__, k) in construction_rules:
-                    new_class = construction_rules[ (self.__class__, k) ]
                 else:
                     # This test is only needed in development mode
                     print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)

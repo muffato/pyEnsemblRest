@@ -94,8 +94,6 @@ class RestServer:
 #__ENDPOINTS_METHODS__
 
 
-#__CONSTRUCTION_RULES__
-
 EnsemblRestServer = RestServer(server_url = "http://rest.ensembl.org")
 EnsemblGenomesRestServer = RestServer(server_url = "http://test.rest.ensemblgenomes.org")
 

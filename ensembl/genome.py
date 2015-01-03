@@ -10,23 +10,44 @@ class Sequence(ensembl.BaseObject):
 class Feature(ensembl.BaseObject):
     """"""
 
-class GeneFeature(Feature):
-    """"""
-
-class TranscriptFeature(Feature):
+class ExonFeature(Feature):
     """"""
 
 class TranslationFeature(Feature):
     """"""
 
-class ExonFeature(Feature):
+class TranscriptFeature(Feature):
+    """"""
+
+    #Translation = property(lambda self : getattr(self, "_Translation"), None, None, """None""")
+    Translation = property(lambda self : getattr(self, "_Translation"), lambda self, val : setattr(self, "_Translation", val), None, """None""")
+
+    #Exon = property(lambda self : getattr(self, "_Exon"), None, None, """None""")
+    Exon = property(lambda self : getattr(self, "_Exon"), lambda self, val : setattr(self, "_Exon", val), None, """None""")
+
+TranscriptFeature._construction_rules = {"Translation":TranslationFeature, "Exon":ExonFeature}
+
+class GeneFeature(Feature):
+    """"""
+
+    #Transcript = property(lambda self : getattr(self, "_Transcript"), None, None, """None""")
+    Transcript = property(lambda self : getattr(self, "_Transcript"), lambda self, val : setattr(self, "_Transcript", val), None, """None""")
+
+GeneFeature._construction_rules = {"Transcript":TranscriptFeature}
+
+class Location(ensembl.BaseObject):
     """"""
 
 class CoordMapping(ensembl.BaseObject):
     """"""
 
-class Location(ensembl.BaseObject):
-    """"""
+    #mapped = property(lambda self : getattr(self, "_mapped"), None, None, """None""")
+    mapped = property(lambda self : getattr(self, "_mapped"), lambda self, val : setattr(self, "_mapped", val), None, """None""")
+
+    #original = property(lambda self : getattr(self, "_original"), None, None, """None""")
+    original = property(lambda self : getattr(self, "_original"), lambda self, val : setattr(self, "_original", val), None, """None""")
+
+CoordMapping._construction_rules = {"mapped":Location, "original":Location}
 
 
 features = {

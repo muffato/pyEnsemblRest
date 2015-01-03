@@ -1090,27 +1090,6 @@ Optional parameters:
 
 
 
-ensembl._pyrest_core.construction_rules[(ensembl.info.Assembly,'top_level_region')] = ensembl.info.SeqRegion
-ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyTerm,'children')] = ensembl.info.OntologyTerm
-ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyTerm,'parents')] = ensembl.info.OntologyTerm
-ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyEntry,'is_a')] = ensembl.info.OntologyTerm
-ensembl._pyrest_core.construction_rules[(ensembl.info.OntologyEntry,'term')] = ensembl.info.OntologyTerm
-ensembl._pyrest_core.construction_rules[(ensembl.compara.HomologyGroup,'homologies')] = ensembl.compara.HomologyPair
-ensembl._pyrest_core.construction_rules[(ensembl.compara.HomologyPair,'target')] = ensembl.compara.Homolog
-ensembl._pyrest_core.construction_rules[(ensembl.compara.HomologyPair,'source')] = ensembl.compara.Homolog
-ensembl._pyrest_core.construction_rules[(ensembl.compara.GenomicAlignment,'alignments')] = ensembl.compara.GenomicAlignmentEntry
-ensembl._pyrest_core.construction_rules[(ensembl.genome.GeneFeature,'Transcript')] = ensembl.genome.TranscriptFeature
-ensembl._pyrest_core.construction_rules[(ensembl.genome.TranscriptFeature,'Translation')] = ensembl.genome.TranslationFeature
-ensembl._pyrest_core.construction_rules[(ensembl.genome.TranscriptFeature,'Exon')] = ensembl.genome.ExonFeature
-ensembl._pyrest_core.construction_rules[(ensembl.genome.CoordMapping,'mapped')] = ensembl.genome.Location
-ensembl._pyrest_core.construction_rules[(ensembl.genome.CoordMapping,'original')] = ensembl.genome.Location
-ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'population_genotypes')] = ensembl.variation.PopulationGenotype
-ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'populations')] = ensembl.variation.PopulationAllele
-ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'genotypes')] = ensembl.variation.Genotype
-ensembl._pyrest_core.construction_rules[(ensembl.variation.Variation,'mappings')] = ensembl.variation.AlleleLocation
-ensembl._pyrest_core.construction_rules[(ensembl.variation.VEPResult,'colocated_variants')] = ensembl.variation.Variant
-ensembl._pyrest_core.construction_rules[(ensembl.variation.VEPResult,'transcript_consequences')] = ensembl.variation.Consequence
-
 EnsemblRestServer = RestServer(server_url = "http://rest.ensembl.org")
 EnsemblGenomesRestServer = RestServer(server_url = "http://test.rest.ensemblgenomes.org")
 

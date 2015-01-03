@@ -4,22 +4,38 @@
 			<object name="Identifier" /> <!-- only used for GeneTreeMember -->
 			<object name="Sequence" />
 			<object name="Feature" />
-			<object name="GeneFeature" base_class="/Feature" />
-			<object name="TranscriptFeature" base_class="/Feature" />
-			<object name="TranslationFeature" base_class="/Feature" />
 			<object name="ExonFeature" base_class="/Feature" />
-			<object name="CoordMapping" />
+			<object name="TranslationFeature" base_class="/Feature" />
+			<object name="TranscriptFeature" base_class="/Feature" >
+				<property name="Translation" object="/TranslationFeature" />
+				<property name="Exon" object="/ExonFeature" />
+			</object>
+			<object name="GeneFeature" base_class="/Feature" >
+				<property name="Transcript" object="/TranscriptFeature" />
+			</object>
 			<object name="Location" />
+			<object name="CoordMapping" >
+				<property name="mapped" object="/Location" />
+				<property name="original" object="/Location" />
+			</object>
 		</namespace>
 		<namespace name="info" >
-			<object name="Assembly" />
 			<object name="SeqRegion" />
+			<object name="Assembly" >
+				<property name="top_level_region" object="/SeqRegion" />
+			</object>
 			<object name="ArchiveEntry" />
 			<object name="Species" />
 			<object name="ExternalDatabase" />
 			<object name="Biotype" />
-			<object name="OntologyTerm" />
-			<object name="OntologyEntry" />
+			<object name="OntologyTerm" >
+				<property name="children" object="/OntologyTerm" />
+				<property name="parents" object="/OntologyTerm" />
+			</object>
+			<object name="OntologyEntry" >
+				<property name="is_a" object="/OntologyTerm" />
+				<property name="term" object="/OntologyTerm" />
+			</object>
 		</namespace>
 		<namespace name="compara" >
 
@@ -29,6 +45,7 @@
 				<property name="tags" description="Additionnal tags" object="/None" />
 			</object>
 
+			<!-- Gene trees -->
 			<object name="GeneTreeMember" description="A leaf of a gene-tree, i.e. a protein / gene" >
 				<property name="id" description="Protein / transcript identifier" object="genome.Identifier" />
 				<property name="mol_seq" description="DNA / protein sequence" object="genome.Sequence" />
@@ -53,11 +70,21 @@
 
 			<object name="MethodLinkSpeciesSet" />
 
-			<object name="HomologyGroup" description="Group of multiple homology-pairs" />
-			<object name="HomologyPair" description="Homology pair" />
+			<!-- Homologies -->
 			<object name="Homolog" />
-			<object name="GenomicAlignment" />
+			<object name="HomologyPair" description="Homology pair" >
+				<property name="target" description="Paralog of the query gene / Ortholog in the other species" object="/Homolog" />
+				<property name="source" description="Query gene" object="/Homolog" />
+			</object>
+			<object name="HomologyGroup" description="Group of multiple homology-pairs" >
+				<property name="homologies" description="All the homology pairs" object="/HomologyPair" />
+			</object>
+
+			<!-- Genomic alignments -->
 			<object name="GenomicAlignmentEntry" />
+			<object name="GenomicAlignment" >
+				<property name="alignments" descriptions="All the alignment-bloks for this query region" object="/GenomicAlignmentEntry" />
+			</object>
 
 		</namespace>
 		<namespace name="funcgen">
@@ -65,38 +92,26 @@
 		</namespace>
 
 		<namespace name="variation">
-			<object name="Variation" />
 			<object name="AlleleLocation" base_class="genome.Location" />
 			<object name="Genotype" />
 			<object name="PopulationGenotype" />
 			<object name="PopulationAllele" />
-			<object name="VEPResult" />
+			<object name="Variation" >
+				<property name="population_genotypes" object="/PopulationGenotype" />
+				<property name="populations" object="/PopulationAllele" />
+				<property name="genotypes" object="/Genotype" />
+				<property name="mappings" object="/AlleleLocation" />
+			</object>
+
 			<object name="Consequence" />
 			<object name="Variant" />
+			<object name="VEPResult" >
+				<property name="colocated_variants" object="/Variant" />
+				<property name="transcript_consequences" object="/Consequence" />
+			</object>
 		</namespace>
 	</objects>
-	<object_links>
-		<link src="info.Assembly" key="top_level_region" target="info.SeqRegion" />
-		<link src="info.OntologyTerm" key="children" target="info.OntologyTerm" />
-		<link src="info.OntologyTerm" key="parents" target="info.OntologyTerm" />
-		<link src="info.OntologyEntry" key="is_a" target="info.OntologyTerm" />
-		<link src="info.OntologyEntry" key="term" target="info.OntologyTerm" />
-		<link src="compara.HomologyGroup" key="homologies" target="compara.HomologyPair" />
-		<link src="compara.HomologyPair" key="target" target="compara.Homolog" />
-		<link src="compara.HomologyPair" key="source" target="compara.Homolog" />
-		<link src="compara.GenomicAlignment" key="alignments" target="compara.GenomicAlignmentEntry" />
-		<link src="genome.GeneFeature" key="Transcript" target="genome.TranscriptFeature" />
-		<link src="genome.TranscriptFeature" key="Translation" target="genome.TranslationFeature" />
-		<link src="genome.TranscriptFeature" key="Exon" target="genome.ExonFeature" />
-		<link src="genome.CoordMapping" key="mapped" target="genome.Location" />
-		<link src="genome.CoordMapping" key="original" target="genome.Location" />
-		<link src="variation.Variation" key="population_genotypes" target="variation.PopulationGenotype" />
-		<link src="variation.Variation" key="populations" target="variation.PopulationAllele" />
-		<link src="variation.Variation" key="genotypes" target="variation.Genotype" />
-		<link src="variation.Variation" key="mappings" target="variation.AlleleLocation" />
-		<link src="variation.VEPResult" key="colocated_variants" target="variation.Variant" />
-		<link src="variation.VEPResult" key="transcript_consequences" target="variation.Consequence" />
-	</object_links>
+
 	<endpoints>
 		<!-- archive.conf -->
 		<endpoint id="archive_id_get" name="getArchiveEntry" object="info.ArchiveEntry" />

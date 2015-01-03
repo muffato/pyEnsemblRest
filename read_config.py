@@ -218,11 +218,6 @@ def build_and_replace(template_anchor, config_tag_name, expected_tag_name, callb
 # endpoint accessors
 build_and_replace('__ENDPOINTS_METHODS__', 'endpoints', 'endpoint', get_code_for_endpoint, sep="\n")
 
-# construction_rules
-build_and_replace('__CONSTRUCTION_RULES__', 'object_links', 'link',
-        lambda c: "ensembl._pyrest_core.construction_rules[(ensembl.%s,'%s')] = %s" % (c.get('src'), c.get('key'), correct_namespace(c.get('target'))), sep="\n"
-)
-
 # content_types
 build_and_replace('__CONTENT_TYPES__', 'content_types', 'content_type',
         lambda c: '"%s": "%s"' % (c.get('alias'), c.get('mime'))

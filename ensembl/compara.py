@@ -35,7 +35,7 @@ class NCBITaxon(ensembl.BaseObject):
     #tags = property(lambda self : getattr(self, "_tags"), None, None, """Additionnal tags""")
     tags = property(lambda self : getattr(self, "_tags"), lambda self, val : setattr(self, "_tags", val), None, """Additionnal tags""")
 
-NCBITaxon._construction_rules = {"parent":NCBITaxon, "tags":None, "children":NCBITaxon}
+NCBITaxon._construction_rules = {"children":NCBITaxon, "parent":NCBITaxon, "tags":None}
 
 class GeneTreeMember(ensembl.BaseObject):
     """A leaf of a gene-tree, i.e. a protein / gene"""
@@ -46,7 +46,7 @@ class GeneTreeMember(ensembl.BaseObject):
     #mol_seq = property(lambda self : getattr(self, "_mol_seq"), None, None, """DNA / protein sequence""")
     mol_seq = property(lambda self : getattr(self, "_mol_seq"), lambda self, val : setattr(self, "_mol_seq", val), None, """DNA / protein sequence""")
 
-GeneTreeMember._construction_rules = {"id":ensembl.genome.Identifier, "mol_seq":ensembl.genome.Sequence}
+GeneTreeMember._construction_rules = {"mol_seq":ensembl.genome.Sequence, "id":ensembl.genome.Identifier}
 
 class GeneTreeEvent(ensembl.BaseObject):
     """The evolutionary event that took place at this node of the tree"""
@@ -72,7 +72,7 @@ class GeneTreeNode(ensembl.BaseObject):
     #sequence = property(lambda self : getattr(self, "_sequence"), None, None, """GeneTreeMember (only for leaves)""")
     sequence = property(lambda self : getattr(self, "_sequence"), lambda self, val : setattr(self, "_sequence", val), None, """GeneTreeMember (only for leaves)""")
 
-GeneTreeNode._construction_rules = {"sequence":GeneTreeMember, "events":GeneTreeEvent, "children":GeneTreeNode, "id":ensembl.genome.Identifier, "taxonomy":NCBITaxon, "confidence":None}
+GeneTreeNode._construction_rules = {"taxonomy":NCBITaxon, "sequence":GeneTreeMember, "events":GeneTreeEvent, "children":GeneTreeNode, "id":ensembl.genome.Identifier, "confidence":None}
 
 class GeneTree(ensembl.BaseObject):
     """Global object for gene-trees"""
@@ -88,20 +88,38 @@ GeneTree._construction_rules = {"tree":GeneTreeNode}
 class MethodLinkSpeciesSet(ensembl.BaseObject):
     """"""
 
-class HomologyGroup(ensembl.BaseObject):
-    """Group of multiple homology-pairs"""
+class Homolog(ensembl.BaseObject):
+    """"""
 
 class HomologyPair(ensembl.BaseObject):
     """Homology pair"""
 
-class Homolog(ensembl.BaseObject):
+    #target = property(lambda self : getattr(self, "_target"), None, None, """Paralog of the query gene / Ortholog in the other species""")
+    target = property(lambda self : getattr(self, "_target"), lambda self, val : setattr(self, "_target", val), None, """Paralog of the query gene / Ortholog in the other species""")
+
+    #source = property(lambda self : getattr(self, "_source"), None, None, """Query gene""")
+    source = property(lambda self : getattr(self, "_source"), lambda self, val : setattr(self, "_source", val), None, """Query gene""")
+
+HomologyPair._construction_rules = {"source":Homolog, "target":Homolog}
+
+class HomologyGroup(ensembl.BaseObject):
+    """Group of multiple homology-pairs"""
+
+    #homologies = property(lambda self : getattr(self, "_homologies"), None, None, """All the homology pairs""")
+    homologies = property(lambda self : getattr(self, "_homologies"), lambda self, val : setattr(self, "_homologies", val), None, """All the homology pairs""")
+
+HomologyGroup._construction_rules = {"homologies":HomologyPair}
+
+class GenomicAlignmentEntry(ensembl.BaseObject):
     """"""
 
 class GenomicAlignment(ensembl.BaseObject):
     """"""
 
-class GenomicAlignmentEntry(ensembl.BaseObject):
-    """"""
+    #alignments = property(lambda self : getattr(self, "_alignments"), None, None, """None""")
+    alignments = property(lambda self : getattr(self, "_alignments"), lambda self, val : setattr(self, "_alignments", val), None, """None""")
+
+GenomicAlignment._construction_rules = {"alignments":GenomicAlignmentEntry}
 
 
 def _gtn_get_all_leaves(self):
