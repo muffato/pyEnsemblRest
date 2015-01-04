@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 
 config_root = ET.parse(sys.argv[1]).getroot()
 rest_checkout = sys.argv[2]
-
+main_namespace = sys.argv[3]
 
 
 # Will keep the content of all the files we're generating
@@ -25,12 +25,13 @@ def replace_placeholder_in_template(filename, key, content_list, sep=''):
 
 
 def correct_namespace(n):
-    return 'ensembl' + n if n.startswith('.') else n
+    mn = main_namespace + n if n.startswith('.') else n
+    return mn.replace('(.', '(' + main_namespace + '.')
 
 ## Generate all the modules with basic object definition
 
 template_init_import_module = 'from . import %s'
-template_module_header = 'import ensembl'
+template_module_header = 'import ' + main_namespace
 
 template_module_object = """
 class {0}({2}):
@@ -193,7 +194,7 @@ def get_code_for_endpoint(e):
         ", ".join(required_params),
         '/'.join(endpoint_url_segments),
         d['description'],
-        "ensembl." + e.get('object') if e.get('object') is not None else "None",
+        correct_namespace('.' + e.get('object')) if e.get('object') is not None else "None",
         d['output'],
         ", ".join(d['output']),
         d['endpoint'],
@@ -239,7 +240,7 @@ build_and_replace('__RESPONSE_CODES__', 'response_codes', 'response_code',
 ## Write down all the files to the disk
 
 for (filename,content) in files.items():
-    with open('ensembl/%s.py' % filename, 'w') as f:
+    with open('%s/%s.py' % (main_namespace,filename), 'w') as f:
         print(content, file=f)
 
 
