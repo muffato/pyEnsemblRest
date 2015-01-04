@@ -7,7 +7,7 @@ EnsemblRestServer and EnsemblGenomesRestServer are two instances of it, set up t
 """
 
 from . import _pyrest_core
-from ensembl._pyrest_core import BaseObject, dict_wrapper
+from ._pyrest_core import BaseObject, dict_wrapper
 
 #__MODULE_IMPORTS__
 
