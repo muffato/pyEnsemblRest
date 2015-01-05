@@ -37,8 +37,15 @@ class UnavailableFormatException(RestServerException):
     pass
 
 class RestServer:
+    """
+    RestServer is a class that knows how to communicate with the Ensembl REST servers.
+    """
 
     def __init__(self, server_url):
+        """
+        Constructor for the RestServer class.
+        server_url is the URL of the server.
+        """
         self.server_url = server_url
         self.http = httplib2.Http()
         self.last_headers = None
