@@ -70,7 +70,7 @@ for config_python_module in config_root.find('objects'):
         for prop in config_python_object:
             # prop is a <property> element
             t = template_property_with_special_getter if prop.get('getter') else template_property
-            module_code.append( t.format( prop.get('name'), prop.get('description'), prop.get('getter') ) )
+            module_code.append( t.format( prop.get('name'), prop.get('description', 'No documentation'), prop.get('getter') ) )
             if prop.get('object'):
                 construction_rules[ prop.get('name') ] = prop.get('object')
                 ns_to_import.update( re.findall( '(\w+)\.' , prop.get('object') ) )
