@@ -34,7 +34,7 @@ class BaseObject(object):
     def __set_new_field(self, k, value, doc = None):
         # k is for the property with documentation, kk is for the actual value
         kk = "_" + k
-        if k not in type(self).__dict__:
+        if k not in dir(self):
             if doc is None:
                 doc = "Undocumented attribute (guessed from the downloaded objects)"
             setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
