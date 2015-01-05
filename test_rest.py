@@ -106,7 +106,9 @@ def test_Ontology():
     print("ancestor_chart", rs.getOntologyAncestorChart('GO:0005667'))
 
 def test_Overlap():
-    print("id", rs.getAllFeaturesOnFeatureID('ENSG00000157764', feature=["cds","gene"]))
+    types = ["gene", "transcript", "cds", "exon", "repeat", "simple", "misc", "variation", "somatic_variation", "structural_variation", "somatic_structural_variation", "constrained", "regulatory", "motif", "chipseq"]
+    for t in types:
+        print("id", t, rs.getAllFeaturesOnFeatureID('ENSG00000157764', feature=[t]))
     print("region", rs.getAllFeaturesOnRegion('human', '7:140424943-140624564', feature=['transcript', 'exon']))
     print("translation", rs.getAllFeaturesOnTranslation('ENSP00000288602'))
 
