@@ -127,7 +127,7 @@ HTTP endpoint: {7}
 
 {8}
 {9}"""
-        return self.build_rest_answer({4}, {5}, {10}, {11}, '{2}'.format({12}), kwargs)
+        return self.__build_rest_answer({4}, {5}, {10}, {11}, '{2}'.format({12}), kwargs)
 '''
 
 template_endpoint_no_args = '''
@@ -140,7 +140,7 @@ HTTP endpoint: {7}
 
 {8}
 {9}"""
-        return self.build_rest_answer({4}, {5}, {10}, {11}, '{2}', kwargs)
+        return self.__build_rest_answer({4}, {5}, {10}, {11}, '{2}', kwargs)
 '''
 
 

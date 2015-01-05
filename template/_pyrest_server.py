@@ -12,11 +12,11 @@ from . import *
 # So we need to add _pyrest_core
 from . import _pyrest_core
 
-content_types = {
+__content_types = {
 #__CONTENT_TYPES__
 }
 
-return_codes = {
+__return_codes = {
 #__RESPONSE_CODES__
 }
 
@@ -34,7 +34,7 @@ class RestServer:
         self.last_headers = None
 
 
-    def get_json_answer(self, url, content_type=None):
+    def __get_json_answer(self, url, content_type=None):
 
         # Rate limiter
         if self.last_headers is not None:
@@ -54,16 +54,16 @@ class RestServer:
             else:
                 break
 
-        if resp.status not in return_codes:
+        if resp.status not in __return_codes:
             raise RestServerException( "Unknown response code: %d" % resp.status, resp, content )
-        if return_codes[resp.status][0] != "OK":
+        if __return_codes[resp.status][0] != "OK":
             raise RestServerException( "Invalid response code: %s (%d)\n%s" % (return_codes[resp.status][0], resp.status, return_codes[resp.status][1]), resp, content )
         self.last_headers = resp
 
         return content.decode('utf-8')
 
 
-    def build_rest_answer(self, new_object, allowed_formats, optional_params, accessor, url, kwargs={}):
+    def __build_rest_answer(self, new_object, allowed_formats, optional_params, accessor, url, kwargs={}):
 
         format = kwargs.pop('output_format', None)
         if format is not None:
@@ -83,7 +83,7 @@ class RestServer:
                     pairs.append( (p,vv) )
             url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(v))) for (p,v) in pairs)
 
-        content = self.get_json_answer(url, content_types.get(format, content_types['json']))
+        content = self.__get_json_answer(url, __content_types.get(format, __content_types['json']))
 
         #print "Format", format
         if format is not None:
