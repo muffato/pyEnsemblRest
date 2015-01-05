@@ -37,6 +37,16 @@ class RestServerException(Exception):
     """Used when the server returned a non-OK code"""
     pass
 
+class UnknownResponseCodeException(RestServerException):
+    """Used when the RestServer does not know the meaning of the HTTP response code returned by the server"""
+    pass
+class NotOKResponseCodeException(RestServerException):
+    """Used when the server returned the response code of an error"""
+    pass
+
+class UnavailableFormatException(RestServerException):
+    """Used when the required output format is not available for this endpoint"""
+    pass
 
 class RestServer:
 
@@ -68,9 +78,9 @@ class RestServer:
                 break
 
         if resp.status not in __return_codes:
-            raise RestServerException( "Unknown response code: %d" % resp.status, resp, content )
+            raise UnknownResponseCodeException(resp.status, resp, content)
         if __return_codes[resp.status][0] != "OK":
-            raise RestServerException( "Invalid response code: %s (%d)\n%s" % (return_codes[resp.status][0], resp.status, return_codes[resp.status][1]), resp, content )
+            raise NotOKResponseCodeException(__return_codes[resp.status], resp.status, resp, content )
         self.last_headers = resp
 
         return content.decode('utf-8')
@@ -82,7 +92,7 @@ class RestServer:
         if format is not None:
             format = format.lower()
             if format not in allowed_formats:
-                #print "unrecognzied format", format
+                raise UnavailableFormatException(format)
                 format = None
 
         if len(kwargs):
