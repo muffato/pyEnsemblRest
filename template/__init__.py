@@ -11,9 +11,7 @@ EnsemblRestServer and EnsemblGenomesRestServer are two instances of it, set up t
 from . import _pyrest_server
 from ._pyrest_server import RestServer
 
-#__REST_INSTANCES__
-
 __all__ = [ 'RestServer' ]
 
-#__REST_INSTANCE_NAMES__
+#__REST_INSTANCES__
 

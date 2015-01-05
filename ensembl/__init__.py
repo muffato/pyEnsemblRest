@@ -15,12 +15,14 @@ from . import variation
 from . import _pyrest_server
 from ._pyrest_server import RestServer
 
-EnsemblRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensembl.org")
-EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensemblgenomes.org")
-
 __all__ = [ 'RestServer' ]
 
-__all__.append('EnsemblRestServer')
-__all__.append('EnsemblGenomesRestServer')
+
+EnsemblRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensembl.org")
+__all__.append(EnsemblRestServer)
+
+EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensemblgenomes.org")
+__all__.append(EnsemblGenomesRestServer)
+
 
 

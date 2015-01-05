@@ -76,7 +76,7 @@ for config_python_module in config_root.find('objects'):
                 ns_to_import.update( re.findall( '(\w+)\.' , prop.get('object') ) )
         if construction_rules:
             module_code.append( template_construction_rules % (config_python_object.get('name'), ', '.join('"%s":%s' % x for x in sorted(construction_rules.items()))) )
-    for n in ns_to_import:
+    for n in sorted(ns_to_import):
         module_code.insert(0, "\n" )
         module_code.insert(0, template_init_import_module % n)
     files[module_name] = "".join(module_code)
@@ -237,11 +237,14 @@ build_and_replace('__CONTENT_TYPES__', 'content_types', 'content_type',
 )
 
 # instances
+template_rest_instance = """
+{0} = _pyrest_server.RestServer(server_url = "{1}")
+__all__.append({0})
+"""
 build_and_replace('__REST_INSTANCES__', 'instances', 'instance',
-        lambda c: '%s = _pyrest_server.RestServer(server_url = "%s")' % (c.get('name'), c.get('url')),
-        sep="\n", filename="__init__"
+        lambda c: template_rest_instance.format(c.get('name'), c.get('url')),
+        sep="", filename="__init__"
 )
-build_and_replace('__REST_INSTANCE_NAMES__', 'instances', 'instance', lambda c: "__all__.append('%s')" % c.get('name'), sep="\n", filename="__init__")
 
 # response codes
 build_and_replace('__RESPONSE_CODES__', 'response_codes', 'response_code',
