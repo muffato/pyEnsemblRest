@@ -18,7 +18,7 @@ def fset(x):
 class BaseObject(object):
 
     def __init__(self, adict, rest_server):
-        self.__set_new_field('server', rest_server, 'REST server that was used to fetch this object')
+        self._server = rest_server
         for k, v in adict.items():
             new_class = None
             if (isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict)):
@@ -46,6 +46,7 @@ class BaseObject(object):
     def __str__(self):
         return self.__class__.__module__ + '.' + self.__class__.__name__ + '(' + ', '.join(x[1:] + '=' + repr(y) for (x,y) in self.__dict__.items() if x != '_server') + ')'
 
+    server = property(fget('_server'), fset('_server'), None, 'REST server that was used to fetch this object')
 
 def construct_object_from_json(obj, new_class, rest_server):
     if new_class is None:
