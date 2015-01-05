@@ -262,11 +262,11 @@ features = {
         'translation' : TranslationFeature,
 }
 
-"""
+def feature_wrapper(d, r):
+    """
     Wrapper arround the various types of features.
     It automatically selects the appropriate type for the fetched features.
-"""
-def feature_wrapper(d, r):
+    """
     t = d.get('object_type')
     if t is None:
         t = d.get('feature_type')
