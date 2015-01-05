@@ -1,13 +1,13 @@
 
-import ensembl
+from . import _pyrest_core
 
-class Identifier(ensembl.BaseObject):
+class Identifier(_pyrest_core.BaseObject):
     """"""
 
-class Sequence(ensembl.BaseObject):
+class Sequence(_pyrest_core.BaseObject):
     """"""
 
-class Feature(ensembl.BaseObject):
+class Feature(_pyrest_core.BaseObject):
     """"""
 
 class ExonFeature(Feature):
@@ -35,10 +35,10 @@ class GeneFeature(Feature):
 
 GeneFeature._construction_rules = {"Transcript":TranscriptFeature}
 
-class Location(ensembl.BaseObject):
+class Location(_pyrest_core.BaseObject):
     """"""
 
-class CoordMapping(ensembl.BaseObject):
+class CoordMapping(_pyrest_core.BaseObject):
     """"""
 
     #mapped = property(lambda self : getattr(self, "_mapped"), None, None, """None""")

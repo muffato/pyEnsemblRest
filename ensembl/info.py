@@ -1,9 +1,9 @@
-import ensembl
+from . import _pyrest_core
 
-class SeqRegion(ensembl.BaseObject):
+class SeqRegion(_pyrest_core.BaseObject):
     """"""
 
-class Assembly(ensembl.BaseObject):
+class Assembly(_pyrest_core.BaseObject):
     """"""
 
     #top_level_region = property(lambda self : getattr(self, "_top_level_region"), None, None, """None""")
@@ -11,19 +11,19 @@ class Assembly(ensembl.BaseObject):
 
 Assembly._construction_rules = {"top_level_region":SeqRegion}
 
-class ArchiveEntry(ensembl.BaseObject):
+class ArchiveEntry(_pyrest_core.BaseObject):
     """"""
 
-class Species(ensembl.BaseObject):
+class Species(_pyrest_core.BaseObject):
     """"""
 
-class ExternalDatabase(ensembl.BaseObject):
+class ExternalDatabase(_pyrest_core.BaseObject):
     """"""
 
-class Biotype(ensembl.BaseObject):
+class Biotype(_pyrest_core.BaseObject):
     """"""
 
-class OntologyTerm(ensembl.BaseObject):
+class OntologyTerm(_pyrest_core.BaseObject):
     """"""
 
     #children = property(lambda self : getattr(self, "_children"), None, None, """None""")
@@ -34,7 +34,7 @@ class OntologyTerm(ensembl.BaseObject):
 
 OntologyTerm._construction_rules = {"children":OntologyTerm, "parents":OntologyTerm}
 
-class OntologyEntry(ensembl.BaseObject):
+class OntologyEntry(_pyrest_core.BaseObject):
     """"""
 
     #is_a = property(lambda self : getattr(self, "_is_a"), None, None, """None""")

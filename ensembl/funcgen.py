@@ -1,5 +1,5 @@
-import ensembl
+from . import _pyrest_core
 
-class RegulatoryFeature(ensembl.BaseObject):
+class RegulatoryFeature(_pyrest_core.BaseObject):
     """"""
 

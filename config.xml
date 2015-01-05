@@ -47,8 +47,8 @@
 
 			<!-- Gene trees -->
 			<object name="GeneTreeMember" description="A leaf of a gene-tree, i.e. a protein / gene" >
-				<property name="id" description="Protein / transcript identifier" object=".genome.Identifier" />
-				<property name="mol_seq" description="DNA / protein sequence" object=".genome.Sequence" />
+				<property name="id" description="Protein / transcript identifier" object="genome.Identifier" />
+				<property name="mol_seq" description="DNA / protein sequence" object="genome.Sequence" />
 			</object>
 
 			<!-- useless -->
@@ -58,7 +58,7 @@
 				<property name="taxonomy" description="Taxonomy annotation of this node" object="NCBITaxon" />
 				<property name="children" description="Child nodes in the gene-tree" object="GeneTreeNode" />
 				<property name="confidence" description="The confidence tags attached to a given gene-tree node" object="None" />
-				<property name="id" description="Gene identifier (only for leaves)" object=".genome.Identifier" />
+				<property name="id" description="Gene identifier (only for leaves)" object="genome.Identifier" />
 				<property name="events" description="The evolutionary event that took place at this node" object="GeneTreeEvent" />
 				<property name="sequence" description="GeneTreeMember (only for leaves)" object="GeneTreeMember" />
 			</object>
@@ -92,7 +92,7 @@
 		</namespace>
 
 		<namespace name="variation">
-			<object name="AlleleLocation" base_class=".genome.Location" />
+			<object name="AlleleLocation" base_class="genome.Location" />
 			<object name="Genotype" />
 			<object name="PopulationGenotype" />
 			<object name="PopulationAllele" />
@@ -156,7 +156,7 @@
 		<endpoint id="ontology_name" name="getOntologyByName" object="info.OntologyTerm" />
 		<endpoint id="ontology_ancestors" name="getAllAncestorsOfOntologyID" object="info.OntologyTerm" />
 		<endpoint id="ontology_descendants" name="getAllDescendantsOfOntologyID" object="info.OntologyTerm" />
-		<endpoint id="ontology_ancestors_chart" name="getOntologyAncestorChart" object="dict_wrapper(info.OntologyEntry)"/>
+		<endpoint id="ontology_ancestors_chart" name="getOntologyAncestorChart" object="_pyrest_core.dict_wrapper(info.OntologyEntry)"/>
 
 		<!-- overlap.conf -->
 		<endpoint id="overlap_id" name="getAllFeaturesOnFeatureID" object="genome.feature_wrapper" />

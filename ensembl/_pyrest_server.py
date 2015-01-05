@@ -722,7 +722,7 @@ Optional parameters:
     def getOntologyAncestorChart(self, id, **kwargs):
         """Reconstruct the entire ancestry of a term from is_a and part_of relationships.
 
-Return type: ensembl.dict_wrapper(ensembl.info.OntologyEntry)
+Return type: Dictionary of String -> ensembl.info.OntologyEntry
 Valid formats: json, xml
 HTTP endpoint: ontology/ancestors/chart/:id
 
@@ -734,7 +734,7 @@ Optional parameters:
 - ontology (String)
     Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
 """
-        return self.build_rest_answer(dict_wrapper(info.OntologyEntry), ['json', 'xml'], ['ontology'], None, 'ontology/ancestors/chart/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(_pyrest_core.dict_wrapper(info.OntologyEntry), ['json', 'xml'], ['ontology'], None, 'ontology/ancestors/chart/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getAllFeaturesOnFeatureID(self, id, **kwargs):

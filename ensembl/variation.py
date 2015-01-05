@@ -1,18 +1,19 @@
-import ensembl
+from . import genome
+from . import _pyrest_core
 
-class AlleleLocation(ensembl.genome.Location):
+class AlleleLocation(genome.Location):
     """"""
 
-class Genotype(ensembl.BaseObject):
+class Genotype(_pyrest_core.BaseObject):
     """"""
 
-class PopulationGenotype(ensembl.BaseObject):
+class PopulationGenotype(_pyrest_core.BaseObject):
     """"""
 
-class PopulationAllele(ensembl.BaseObject):
+class PopulationAllele(_pyrest_core.BaseObject):
     """"""
 
-class Variation(ensembl.BaseObject):
+class Variation(_pyrest_core.BaseObject):
     """"""
 
     #population_genotypes = property(lambda self : getattr(self, "_population_genotypes"), None, None, """None""")
@@ -29,13 +30,13 @@ class Variation(ensembl.BaseObject):
 
 Variation._construction_rules = {"genotypes":Genotype, "mappings":AlleleLocation, "population_genotypes":PopulationGenotype, "populations":PopulationAllele}
 
-class Consequence(ensembl.BaseObject):
+class Consequence(_pyrest_core.BaseObject):
     """"""
 
-class Variant(ensembl.BaseObject):
+class Variant(_pyrest_core.BaseObject):
     """"""
 
-class VEPResult(ensembl.BaseObject):
+class VEPResult(_pyrest_core.BaseObject):
     """"""
 
     #colocated_variants = property(lambda self : getattr(self, "_colocated_variants"), None, None, """None""")

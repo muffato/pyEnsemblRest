@@ -1,5 +1,6 @@
 
 
+import re
 import sys
 import glob
 import os.path
@@ -24,14 +25,9 @@ def replace_placeholder_in_template(filename, key, content_list, sep=''):
     files[filename] = files[filename].replace('#'+key, sep.join(content_list))
 
 
-def correct_namespace(n):
-    mn = main_namespace + n if n.startswith('.') else n
-    return mn.replace('wrapper(', 'wrapper(' + main_namespace + '.')
-
 ## Generate all the modules with basic object definition
 
 template_init_import_module = 'from . import %s'
-template_module_header = 'import ' + main_namespace
 
 template_module_object = """
 class {0}({2}):
@@ -63,19 +59,26 @@ for config_python_module in config_root.find('objects'):
     init_imports.append(template_init_import_module % module_name)
 
     # All the objects in this module
-    module_code = [ template_module_header, "\n" ]
+    module_code = [ ]
+    ns_to_import = set( ['_pyrest_core'] )
     for config_python_object in config_python_module:
         # config_python_object is a <object> element
-        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), correct_namespace(config_python_object.get('base_class', '.BaseObject')) ) )
+        if config_python_object.get('base_class'):
+            ns_to_import.update( re.findall( '(\w+)\.' , config_python_object.get('base_class')) )
+        module_code.append( template_module_object.format(config_python_object.get('name'), config_python_object.get('description', ''), config_python_object.get('base_class', '_pyrest_core.BaseObject') ) )
         construction_rules = {}
         for prop in config_python_object:
             # prop is a <property> element
             t = template_property_with_special_getter if prop.get('getter') else template_property
             module_code.append( t.format( prop.get('name'), prop.get('description'), prop.get('getter') ) )
             if prop.get('object'):
-                construction_rules[ prop.get('name') ] = correct_namespace(prop.get('object'))
+                construction_rules[ prop.get('name') ] = prop.get('object')
+                ns_to_import.update( re.findall( '(\w+)\.' , prop.get('object') ) )
         if construction_rules:
             module_code.append( template_construction_rules % (config_python_object.get('name'), ', '.join('"%s":%s' % x for x in sorted(construction_rules.items()))) )
+    for n in ns_to_import:
+        module_code.insert(0, "\n" )
+        module_code.insert(0, template_init_import_module % n)
     files[module_name] = "".join(module_code)
 
     # Adds the extra methods we want on those objects
@@ -154,15 +157,15 @@ def allparams_docstring(title, allparams, parameter_details):
 
 def get_code_for_endpoint(e):
 
-    re = endpoints[e.get('id')]
-    d = decode_config(re.text, ['output'])
+    endpoint_config = endpoints[e.get('id')]
+    d = decode_config(endpoint_config.text, ['output'])
     try:
         d['endpoint'] = d['endpoint'].replace('"', '')
     except KeyError:
-        raise SyntaxError("No 'endpoint' parameter in the endpoint id '{0}'".format(re.tag))
+        raise SyntaxError("No 'endpoint' parameter in the endpoint id '{0}'".format(endpoint_config.tag))
 
     ordered_parameters = []
-    for p in (re.find('params') or []):
+    for p in (endpoint_config.find('params') or []):
         t = p.text
         if list(p):
             print("Warning, there are some HTML tags inside the description of '{0}'. Trying to sort it out ...".format(d['endpoint']), file=sys.stderr)
@@ -189,6 +192,14 @@ def get_code_for_endpoint(e):
 
     optional_params = [p for (p,dp) in ordered_parameters if (p not in required_params) and ('deprecated' not in dp)]
 
+    if e.get('object'):
+        if 'dict_wrapper' in e.get('object'):
+            full_object_name = 'Dictionary of String -> %s.%s' % (main_namespace, re.findall('\((.*)\)', e.get('object'))[0])
+        else:
+            full_object_name = main_namespace + "." + e.get('object')
+    else:
+        full_object_name = "None"
+
     return (template_endpoint if len(required_params) else template_endpoint_no_args).format(
         e.get('name'),
         ", ".join(required_params),
@@ -203,7 +214,7 @@ def get_code_for_endpoint(e):
         optional_params,
         None if e.get('accessor') is None else '"%s"' % e.get('accessor'),
         ", ".join("urllib.parse.quote(str({0}))".format(_) for _ in required_params),
-        correct_namespace("." + e.get('object')) if e.get('object') is not None else "None",
+        full_object_name,
     )
 
 

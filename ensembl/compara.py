@@ -21,9 +21,10 @@ def _tax_children(self):
 
 
 
-import ensembl
+from . import genome
+from . import _pyrest_core
 
-class NCBITaxon(ensembl.BaseObject):
+class NCBITaxon(_pyrest_core.BaseObject):
     """A node in the NCBI taxonomy"""
 
     #parent = property(_tax_parent, None, None, """Parent node in the taxonomy""")
@@ -37,7 +38,7 @@ class NCBITaxon(ensembl.BaseObject):
 
 NCBITaxon._construction_rules = {"children":NCBITaxon, "parent":NCBITaxon, "tags":None}
 
-class GeneTreeMember(ensembl.BaseObject):
+class GeneTreeMember(_pyrest_core.BaseObject):
     """A leaf of a gene-tree, i.e. a protein / gene"""
 
     #id = property(lambda self : getattr(self, "_id"), None, None, """Protein / transcript identifier""")
@@ -46,12 +47,12 @@ class GeneTreeMember(ensembl.BaseObject):
     #mol_seq = property(lambda self : getattr(self, "_mol_seq"), None, None, """DNA / protein sequence""")
     mol_seq = property(lambda self : getattr(self, "_mol_seq"), lambda self, val : setattr(self, "_mol_seq", val), None, """DNA / protein sequence""")
 
-GeneTreeMember._construction_rules = {"id":ensembl.genome.Identifier, "mol_seq":ensembl.genome.Sequence}
+GeneTreeMember._construction_rules = {"id":genome.Identifier, "mol_seq":genome.Sequence}
 
-class GeneTreeEvent(ensembl.BaseObject):
+class GeneTreeEvent(_pyrest_core.BaseObject):
     """The evolutionary event that took place at this node of the tree"""
 
-class GeneTreeNode(ensembl.BaseObject):
+class GeneTreeNode(_pyrest_core.BaseObject):
     """Node in a gene-tree"""
 
     #taxonomy = property(lambda self : getattr(self, "_taxonomy"), None, None, """Taxonomy annotation of this node""")
@@ -72,9 +73,9 @@ class GeneTreeNode(ensembl.BaseObject):
     #sequence = property(lambda self : getattr(self, "_sequence"), None, None, """GeneTreeMember (only for leaves)""")
     sequence = property(lambda self : getattr(self, "_sequence"), lambda self, val : setattr(self, "_sequence", val), None, """GeneTreeMember (only for leaves)""")
 
-GeneTreeNode._construction_rules = {"children":GeneTreeNode, "confidence":None, "events":GeneTreeEvent, "id":ensembl.genome.Identifier, "sequence":GeneTreeMember, "taxonomy":NCBITaxon}
+GeneTreeNode._construction_rules = {"children":GeneTreeNode, "confidence":None, "events":GeneTreeEvent, "id":genome.Identifier, "sequence":GeneTreeMember, "taxonomy":NCBITaxon}
 
-class GeneTree(ensembl.BaseObject):
+class GeneTree(_pyrest_core.BaseObject):
     """Global object for gene-trees"""
 
     #tree = property(lambda self : getattr(self, "_tree"), None, None, """root node""")
@@ -85,13 +86,13 @@ class GeneTree(ensembl.BaseObject):
 
 GeneTree._construction_rules = {"tree":GeneTreeNode}
 
-class MethodLinkSpeciesSet(ensembl.BaseObject):
+class MethodLinkSpeciesSet(_pyrest_core.BaseObject):
     """"""
 
-class Homolog(ensembl.BaseObject):
+class Homolog(_pyrest_core.BaseObject):
     """"""
 
-class HomologyPair(ensembl.BaseObject):
+class HomologyPair(_pyrest_core.BaseObject):
     """Homology pair"""
 
     #target = property(lambda self : getattr(self, "_target"), None, None, """Paralog of the query gene / Ortholog in the other species""")
@@ -102,7 +103,7 @@ class HomologyPair(ensembl.BaseObject):
 
 HomologyPair._construction_rules = {"source":Homolog, "target":Homolog}
 
-class HomologyGroup(ensembl.BaseObject):
+class HomologyGroup(_pyrest_core.BaseObject):
     """Group of multiple homology-pairs"""
 
     #homologies = property(lambda self : getattr(self, "_homologies"), None, None, """All the homology pairs""")
@@ -110,14 +111,14 @@ class HomologyGroup(ensembl.BaseObject):
 
 HomologyGroup._construction_rules = {"homologies":HomologyPair}
 
-class GenomicAlignmentEntry(ensembl.BaseObject):
+class GenomicAlignmentEntry(_pyrest_core.BaseObject):
     """"""
 
-class GenomicAlignment(ensembl.BaseObject):
+class GenomicAlignment(_pyrest_core.BaseObject):
     """"""
 
-    #alignments = property(lambda self : getattr(self, "_alignments"), None, None, """None""")
-    alignments = property(lambda self : getattr(self, "_alignments"), lambda self, val : setattr(self, "_alignments", val), None, """None""")
+    #alignments = property(lambda self : getattr(self, "_alignments"), None, None, """All the alignment-bloks for this query region""")
+    alignments = property(lambda self : getattr(self, "_alignments"), lambda self, val : setattr(self, "_alignments", val), None, """All the alignment-bloks for this query region""")
 
 GenomicAlignment._construction_rules = {"alignments":GenomicAlignmentEntry}
 
