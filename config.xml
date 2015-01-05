@@ -3,16 +3,115 @@
 		<namespace name="genome" >
 			<object name="Identifier" /> <!-- only used for GeneTreeMember -->
 			<object name="Sequence" />
-			<object name="Feature" />
-			<object name="ExonFeature" base_class="Feature" />
-			<object name="TranslationFeature" base_class="Feature" />
-			<object name="TranscriptFeature" base_class="Feature" >
-				<property name="Translation" object="TranslationFeature" />
-				<property name="Exon" object="ExonFeature" />
+
+			<!-- The genome features -->
+
+			<object name="Feature" >
+				<!-- the base class -->
+				<property name="seq_region_name" description="Name of the chromosome, scaffold, etc the feature is on" />
+				<property name="feature_type" description="Type of this feature, usually redundant with the class itself (e.g. ExonFeature, TranscriptFeature, etc)" />
+				<property name="start" description="Start coordinate" />
+				<property name="end" description="End coordinate" />
+				<property name="strand" description="Strand" />
+				<property name="assembly_name" description="Name of the genome assembly" />
 			</object>
-			<object name="GeneFeature" base_class="Feature" >
-				<property name="Transcript" object="TranscriptFeature" />
+			<object name="FeatureWithID" base_class="Feature" >
+				<property name="id" />
 			</object>
+
+			<object name="ExonFeature" base_class="FeatureWithID" >
+				<property name="source" />
+				<property name="constitutive" />
+				<property name="ensembl_phase" />
+				<property name="ensembl_end_phase" />
+				<property name="parent" />
+				<property name="version" />
+				<property name="rank" />
+			</object>
+			<object name="TranslationFeature" base_class="FeatureWithID" >
+				<property name="description" />
+				<property name="parent" />
+				<property name="interpro" />
+				<property name="type" />
+			</object>
+			<object name="FeatureLikeBiotype" base_class="FeatureWithID" >
+				<property name="biotype" />
+				<property name="external_name" />
+				<property name="description" />
+				<property name="source" />
+				<property name="version" />
+				<property name="logic_name" />
+			</object>
+			<object name="TranscriptFeature" base_class="FeatureLikeBiotype" >
+				<property name="translation" object="TranslationFeature" />
+				<property name="exon" object="ExonFeature" />
+				<property name="parent" />
+			</object>
+			<object name="GeneFeature" base_class="FeatureLikeBiotype" >
+				<property name="transcript" object="TranscriptFeature" />
+			</object>
+
+
+			<object name="ChipSeqFeature" base_class="Feature" >
+				<property name="chipseq_feature_type" description="ChipSeq type" />
+				<property name="cell_type" description="Cell type" />
+			</object>
+			<object name="MotifFeature" base_class="Feature" >
+				<property name="binding_matrix" />
+				<property name="score" />
+				<property name="motif_feature_type" />
+			</object>
+
+			<object name="RegulatoryFeature" base_class="FeatureWithID" >
+				<property name="description" />
+				<property name="bound_start" />
+				<property name="cell_type" />
+				<property name="bound_end" />
+				<property name="activity_evidence" />
+			</object>
+
+
+
+			<object name="ConstrainedElementFeature" base_class="FeatureWithID" >
+				<property name="score" />
+			</object>
+
+
+
+			<object name="VariationFeature" base_class="FeatureWithID" >
+				<property name="cell_type" />
+				<property name="alt_alleles" />
+				<property name="consequence_type" />
+			</object>
+
+			<object name="StructuralVariationFeature" base_class="FeatureWithID" />
+
+
+			<object name="MiscFeature" base_class="FeatureWithID" >
+				<property name="misc_set_code" />
+				<property name="clone_name" />
+				<property name="misc_set_name" />
+				<property name="type" />
+				<property name="name" />
+				<property name="state" />
+			</object>
+
+			<object name="SimpleFeature" base_class="Feature" >
+				<property name="score" />
+				<property name="external_name" />
+				<property name="logic_name" />
+			</object>
+
+			<object name="RepeatFeature" base_class="Feature" >
+				<property name="description" />
+			</object>
+
+			<object name="CDSFeature" base_class="FeatureWithID" >
+				<property name="source" />
+				<property name="parent" />
+				<property name="phase" />
+			</object>
+
 			<object name="Location" />
 			<object name="CoordMapping" >
 				<property name="mapped" object="Location" />

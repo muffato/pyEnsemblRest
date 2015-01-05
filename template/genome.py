@@ -4,9 +4,27 @@
 features = {
         'gene' : GeneFeature,
         'transcript' : TranscriptFeature,
+        'cds': CDSFeature,
+        'exon' : ExonFeature,
+        'repeat' : RepeatFeature,
+        'simple' : SimpleFeature,
+        'misc' : MiscFeature,
+        'variation' : VariationFeature,
+        'somatic_variation' : VariationFeature,
+        'structural_variation' : StructuralVariationFeature,
+        'somatic_structural_variation' : StructuralVariationFeature,
+        'constrained' : ConstrainedElementFeature,
+        'regulatory' : RegulatoryFeature,
+        'motif' : MotifFeature,
+        'chipseq' : ChipSeqFeature,
+
         'translation' : TranslationFeature,
-        'exon' : ExonFeature
 }
+
+"""
+    Wrapper arround the various types of features.
+    It automatically selects the appropriate type for the fetched features.
+"""
 def feature_wrapper(d, r):
     t = d.get('object_type')
     if t is None:
