@@ -32,6 +32,7 @@ class BaseObject(object):
             self.__set_new_field(k, vv)
 
     def __set_new_field(self, k, value, doc = None):
+        k = k.lower()
         # k is for the property with documentation, kk is for the actual value
         kk = "_" + k
         if k not in dir(self):
