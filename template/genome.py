@@ -1,7 +1,7 @@
 
 #__GENERATED_OBJECTS__
 
-features = {
+__feature_types = {
         'gene' : GeneFeature,
         'transcript' : TranscriptFeature,
         'cds': CDSFeature,
@@ -34,10 +34,10 @@ def feature_wrapper(d, r):
         t = Feature
     else:
         t = t.lower()
-        if t not in features:
+        if t not in __feature_types:
             print("Unrecognized feature type:", t)
             t = Feature
         else:
-            t = features[t]
+            t = __feature_types[t]
     return t(d,r)
 
