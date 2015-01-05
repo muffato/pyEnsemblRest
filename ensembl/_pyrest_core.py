@@ -18,7 +18,7 @@ def fset(x):
 class BaseObject(object):
 
     def __init__(self, adict, rest_server):
-        self.__set_new_field('server', rest_server, 'REST server that was used to fetch this object')
+        self.__set_new_field('server', rest_server, None)
         for k, v in adict.items():
             new_class = None
             if (isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict)):
@@ -32,9 +32,10 @@ class BaseObject(object):
             self.__set_new_field(k, vv)
 
     def __set_new_field(self, k, value, doc = None):
+        k = k.lower()
         # k is for the property with documentation, kk is for the actual value
         kk = "_" + k
-        if k not in type(self).__dict__:
+        if k not in dir(self):
             if doc is None:
                 doc = "Undocumented attribute (guessed from the downloaded objects)"
             setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
@@ -46,6 +47,7 @@ class BaseObject(object):
     def __str__(self):
         return self.__class__.__module__ + '.' + self.__class__.__name__ + '(' + ', '.join(x[1:] + '=' + repr(y) for (x,y) in self.__dict__.items() if x != '_server') + ')'
 
+    server = property(fget('_server'), fset('_server'), None, 'REST server that was used to fetch this object')
 
 def construct_object_from_json(obj, new_class, rest_server):
     if new_class is None:
