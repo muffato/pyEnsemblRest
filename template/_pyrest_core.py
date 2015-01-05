@@ -20,6 +20,7 @@ class BaseObject(object):
     def __init__(self, adict, rest_server):
         self._server = rest_server
         for k, v in adict.items():
+            k = k.lower()
             new_class = None
             if (isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict)):
                 if k in self._construction_rules:
@@ -27,19 +28,15 @@ class BaseObject(object):
                     #print("new system:", k, new_class)
                 else:
                     # This test is only needed in development mode
-                    print("'%s' undefined for %s" % (k, type(self)), file=sys.stderr)
+                    print("No property type defined for '%s' in %s" % (k, type(self)), file=sys.stderr)
             vv = construct_object_from_json(v, new_class, rest_server)
-            self.__set_new_field(k, vv)
-
-    def __set_new_field(self, k, value, doc = None):
-        k = k.lower()
-        # k is for the property with documentation, kk is for the actual value
-        kk = "_" + k
-        if k not in dir(self):
-            if doc is None:
+            # k is for the property with documentation, kk is for the actual value
+            kk = "_" + k
+            if k not in dir(self):
                 doc = "Undocumented attribute (guessed from the downloaded objects)"
-            setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
-        self.__dict__[kk] = value
+                print("'%s' (in %s) has no documentation" % (k, type(self)), file=sys.stderr)
+                setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
+            self.__dict__[kk] = vv
 
     # __repr__ defaults to something like '<ensembl.compara.NCBITaxon object at 0x7f85de15f668>'
     # __str__ shows the content of the object at its first level only (it calls __repr__ on the sub-objects, not __str__), e.g.
