@@ -83,7 +83,7 @@
 			<!-- Genomic alignments -->
 			<object name="GenomicAlignmentEntry" />
 			<object name="GenomicAlignment" >
-				<property name="alignments" descriptions="All the alignment-bloks for this query region" object="GenomicAlignmentEntry" />
+				<property name="alignments" description="All the alignment-bloks for this query region" object="GenomicAlignmentEntry" />
 			</object>
 
 		</namespace>
