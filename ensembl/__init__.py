@@ -19,7 +19,7 @@ from . import _pyrest_server
 from ._pyrest_server import RestServer
 
 EnsemblRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensembl.org")
-EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://test.rest.ensemblgenomes.org")
+EnsemblGenomesRestServer = _pyrest_server.RestServer(server_url = "http://rest.ensemblgenomes.org")
 
 __all__ = [ 'RestServer' ]
 

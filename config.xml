@@ -186,7 +186,7 @@
 	</endpoints>
 	<instances>
 		<instance name="EnsemblRestServer" url="http://rest.ensembl.org" />
-		<instance name="EnsemblGenomesRestServer" url="http://test.rest.ensemblgenomes.org" />
+		<instance name="EnsemblGenomesRestServer" url="http://rest.ensemblgenomes.org" />
 	</instances>
 	<content_types>
 		<content_type alias="bed" mime="text/x-bed" />
