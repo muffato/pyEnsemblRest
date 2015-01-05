@@ -40,7 +40,9 @@ class BaseObject(object):
             setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
         self.__dict__[kk] = value
 
-    # __repr__ defaults to something like '<ensembl.info.Ontology object at 0x7f2435e1bf98>'
+    # __repr__ defaults to something like '<ensembl.compara.NCBITaxon object at 0x7f85de15f668>'
+    # __str__ shows the content of the object at its first level only (it calls __repr__ on the sub-objects, not __str__), e.g.
+    #  "ensembl.compara.NCBITaxon(children=[<ensembl.compara.NCBITaxon object at 0x7f85de15fa20>, <ensembl.compara.NCBITaxon object at 0x7f85de15fac8>], tags={'scientific name': ['Homo sapiens'], 'name': ['Homo sapiens'], 'common name': ['man'], 'genbank common name': ['human'], 'authority': ['Homo sapiens Linnaeus, 1758'], 'ensembl alias name': ['Human']}, scientific_name='Homo sapiens', leaf=0, name='Homo sapiens', id='9606', parent=<ensembl.compara.NCBITaxon object at 0x7f85de15f6d8>)"
     def __str__(self):
         return self.__class__.__module__ + '.' + self.__class__.__name__ + '(' + ', '.join(x[1:] + '=' + repr(y) for (x,y) in self.__dict__.items() if x != '_server') + ')'
 
