@@ -7,8 +7,10 @@ import time
 import urllib
 import sys
 
+# This imports all the public packages (the ones that don't start with an underscore) and the content of __all__
+from . import *
+# So we need to add _pyrest_core
 from . import _pyrest_core
-import ensembl
 
 content_types = {
 "bed": "text/x-bed",
@@ -118,7 +120,7 @@ Required parameters:
     An Ensembl stable ID
 
 """
-        return self.build_rest_answer(ensembl.info.ArchiveEntry, ['json', 'xml'], [], None, 'archive/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(info.ArchiveEntry, ['json', 'xml'], [], None, 'archive/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getAssemblyInfo(self, species, **kwargs):
@@ -136,7 +138,7 @@ Optional parameters:
 - bands (Boolean(0,1))
     If set to 1, include karyotype band information. Only display if band information is available
 """
-        return self.build_rest_answer(ensembl.info.Assembly, ['json', 'xml'], ['bands'], None, 'info/assembly/{0}'.format(urllib.parse.quote(str(species))), kwargs)
+        return self.build_rest_answer(info.Assembly, ['json', 'xml'], ['bands'], None, 'info/assembly/{0}'.format(urllib.parse.quote(str(species))), kwargs)
 
 
     def getAssemblyInfoRegion(self, species, region_name, **kwargs):
@@ -156,7 +158,7 @@ Optional parameters:
 - bands (Boolean(0,1))
     If set to 1, include karyotype band information. Only display if band information is available
 """
-        return self.build_rest_answer(ensembl.info.SeqRegion, ['json', 'xml'], ['bands'], None, 'info/assembly/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region_name))), kwargs)
+        return self.build_rest_answer(info.SeqRegion, ['json', 'xml'], ['bands'], None, 'info/assembly/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region_name))), kwargs)
 
 
     def getGeneTreeById(self, id, **kwargs):
@@ -180,7 +182,7 @@ Optional parameters:
 - nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
     The format of a NH (New Hampshire) request.
 """
-        return self.build_rest_answer(ensembl.compara.GeneTree, ['phyloxml', 'nh', 'json'], ['compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(compara.GeneTree, ['phyloxml', 'nh', 'json'], ['compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getGeneTreeByMemberId(self, id, **kwargs):
@@ -210,7 +212,7 @@ Optional parameters:
 - nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
     The format of a NH (New Hampshire) request.
 """
-        return self.build_rest_answer(ensembl.compara.GeneTree, ['phyloxml', 'nh', 'json'], ['species', 'db_type', 'object_type', 'compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/member/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(compara.GeneTree, ['phyloxml', 'nh', 'json'], ['species', 'db_type', 'object_type', 'compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/member/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getGeneTreeByMemberSymbol(self, species, symbol, **kwargs):
@@ -242,7 +244,7 @@ Optional parameters:
 - nh_format (Enum(full, display_label_composite, simple, species, species_short_name, ncbi_taxon, ncbi_name, njtree, phylip))
     The format of a NH (New Hampshire) request.
 """
-        return self.build_rest_answer(ensembl.compara.GeneTree, ['phyloxml', 'nh', 'json'], ['db_type', 'external_db', 'object_type', 'compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/member/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
+        return self.build_rest_answer(compara.GeneTree, ['phyloxml', 'nh', 'json'], ['db_type', 'external_db', 'object_type', 'compara', 'aligned', 'sequence', 'nh_format'], None, 'genetree/member/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
 
 
     def getHomologyByGeneSymbol(self, species, symbol, **kwargs):
@@ -276,7 +278,7 @@ Optional parameters:
 - sequence (Enum(none, cdna, protein))
     The type of sequence to bring back. Setting it to none results in no sequence being returned
 """
-        return self.build_rest_answer(ensembl.compara.HomologyGroup, ['json', 'xml', 'orthoxml'], ['compara', 'external_db', 'format', 'type', 'target_species', 'target_taxon', 'aligned', 'sequence'], "data", 'homology/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
+        return self.build_rest_answer(compara.HomologyGroup, ['json', 'xml', 'orthoxml'], ['compara', 'external_db', 'format', 'type', 'target_species', 'target_taxon', 'aligned', 'sequence'], "data", 'homology/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
 
 
     def getHomologyByGeneStableID(self, id, **kwargs):
@@ -308,7 +310,7 @@ Optional parameters:
 - sequence (Enum(none, cdna, protein))
     The type of sequence to bring back. Setting it to none results in no sequence being returned
 """
-        return self.build_rest_answer(ensembl.compara.HomologyGroup, ['json', 'xml', 'orthoxml'], ['species', 'compara', 'format', 'type', 'target_species', 'target_taxon', 'aligned', 'sequence'], "data", 'homology/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(compara.HomologyGroup, ['json', 'xml', 'orthoxml'], ['species', 'compara', 'format', 'type', 'target_species', 'target_taxon', 'aligned', 'sequence'], "data", 'homology/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getGenomicAlignmentByRegion(self, species, region, **kwargs):
@@ -342,7 +344,7 @@ Optional parameters:
 - compact (Boolean)
     Applicable to EPO_LOW_COVERAGE alignments. If true, concatenate the low coverage species sequences together to create a single sequence. Otherwise, separates out all sequences.
 """
-        return self.build_rest_answer(ensembl.compara.GenomicAlignment, ['json', 'xml', 'phyloxml'], ['compara', 'aligned', 'mask', 'species_set_group', 'species_set', 'method', 'display_species_set', 'compact'], None, 'alignment/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
+        return self.build_rest_answer(compara.GenomicAlignment, ['json', 'xml', 'phyloxml'], ['compara', 'aligned', 'mask', 'species_set_group', 'species_set', 'method', 'display_species_set', 'compact'], None, 'alignment/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
 
 
     def ping(self, **kwargs):
@@ -369,7 +371,7 @@ Optional parameters:
 - division (String)
     Filter by Ensembl or Ensembl Genomes division.
 """
-        return self.build_rest_answer(ensembl.info.Species, ['json', 'xml'], ['division'], "species", 'info/species', kwargs)
+        return self.build_rest_answer(info.Species, ['json', 'xml'], ['division'], "species", 'info/species', kwargs)
 
 
     def listComparaDatabases(self, **kwargs):
@@ -447,7 +449,7 @@ Required parameters:
     Species name/alias
 
 """
-        return self.build_rest_answer(ensembl.info.Biotype, ['json', 'xml'], [], None, 'info/biotypes/{0}'.format(urllib.parse.quote(str(species))), kwargs)
+        return self.build_rest_answer(info.Biotype, ['json', 'xml'], [], None, 'info/biotypes/{0}'.format(urllib.parse.quote(str(species))), kwargs)
 
 
     def getExternalDatabasesBySpecies(self, species, **kwargs):
@@ -465,7 +467,7 @@ Optional parameters:
 - filter (String)
     Restrict external DB searches to a single source or pattern. SQL-LIKE patterns are supported.
 """
-        return self.build_rest_answer(ensembl.info.ExternalDatabase, ['json', 'xml'], ['filter'], None, 'info/external_dbs/{0}'.format(urllib.parse.quote(str(species))), kwargs)
+        return self.build_rest_answer(info.ExternalDatabase, ['json', 'xml'], ['filter'], None, 'info/external_dbs/{0}'.format(urllib.parse.quote(str(species))), kwargs)
 
 
     def getAllComparaMethods(self, **kwargs):
@@ -500,7 +502,7 @@ Optional parameters:
 - compara (String)
     Name of the compara database to use. Multiple comparas may exist on a server when accessing Ensembl Genomes data.
 """
-        return self.build_rest_answer(ensembl.compara.MethodLinkSpeciesSet, ['json', 'yaml', 'xml'], ['compara'], None, 'info/compara/species_sets/{0}'.format(urllib.parse.quote(str(method))), kwargs)
+        return self.build_rest_answer(compara.MethodLinkSpeciesSet, ['json', 'yaml', 'xml'], ['compara'], None, 'info/compara/species_sets/{0}'.format(urllib.parse.quote(str(method))), kwargs)
 
 
     def lookupIdentifier(self, id, **kwargs):
@@ -524,7 +526,7 @@ Optional parameters:
 - expand (Boolean(0,1))
     Expands the search to include any connected features. e.g. If the object is a gene, its transcripts, translations and exons will be returned as well.
 """
-        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml'], ['species', 'db_type', 'format', 'expand'], None, 'lookup/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(genome.feature_wrapper, ['json', 'xml'], ['species', 'db_type', 'format', 'expand'], None, 'lookup/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def lookupGeneSymbol(self, species, symbol, **kwargs):
@@ -546,7 +548,7 @@ Optional parameters:
 - expand (Boolean(0,1))
     Expands the search to include any connected features. e.g. If the object is a gene, its transcripts, translations and exons will be returned as well.
 """
-        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml'], ['format', 'expand'], None, 'lookup/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
+        return self.build_rest_answer(genome.feature_wrapper, ['json', 'xml'], ['format', 'expand'], None, 'lookup/symbol/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(symbol))), kwargs)
 
 
     def mapCoordinatesBetweenAssemblies(self, species, asm_one, region, asm_two, **kwargs):
@@ -570,7 +572,7 @@ Optional parameters:
 - coord_system (String)
     Name of the output coordinate system
 """
-        return self.build_rest_answer(ensembl.genome.CoordMapping, ['json', 'xml'], ['coord_system'], "mappings", 'map/{0}/{1}/{2}/{3}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(asm_one)), urllib.parse.quote(str(region)), urllib.parse.quote(str(asm_two))), kwargs)
+        return self.build_rest_answer(genome.CoordMapping, ['json', 'xml'], ['coord_system'], "mappings", 'map/{0}/{1}/{2}/{3}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(asm_one)), urllib.parse.quote(str(region)), urllib.parse.quote(str(asm_two))), kwargs)
 
 
     def mapCDNACoordinatesToGenome(self, id, region, **kwargs):
@@ -590,7 +592,7 @@ Optional parameters:
 - species (String)
     Species name/alias
 """
-        return self.build_rest_answer(ensembl.genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/cdna/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
+        return self.build_rest_answer(genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/cdna/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
 
 
     def mapCDSCoordinatesToGenome(self, id, region, **kwargs):
@@ -610,7 +612,7 @@ Optional parameters:
 - species (String)
     Species name/alias
 """
-        return self.build_rest_answer(ensembl.genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/cds/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
+        return self.build_rest_answer(genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/cds/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
 
 
     def mapProteinCoordinatesToGenome(self, id, region, **kwargs):
@@ -630,7 +632,7 @@ Optional parameters:
 - species (String)
     Species name/alias
 """
-        return self.build_rest_answer(ensembl.genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/translation/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
+        return self.build_rest_answer(genome.Location, ['json', 'xml'], ['species'], "mappings", 'map/translation/{0}/{1}'.format(urllib.parse.quote(str(id)), urllib.parse.quote(str(region))), kwargs)
 
 
     def getOntologyByID(self, id, **kwargs):
@@ -650,7 +652,7 @@ Optional parameters:
 - simple (Boolean)
     If set the API will avoid the fetching of parent and child terms
 """
-        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml', 'yaml'], ['relation', 'simple'], None, 'ontology/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(info.OntologyTerm, ['json', 'xml', 'yaml'], ['relation', 'simple'], None, 'ontology/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getOntologyByName(self, name, **kwargs):
@@ -672,7 +674,7 @@ Optional parameters:
 - simple (Boolean)
     If set the API will avoid the fetching of parent and child terms
 """
-        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml', 'yaml'], ['ontology', 'relation', 'simple'], None, 'ontology/name/{0}'.format(urllib.parse.quote(str(name))), kwargs)
+        return self.build_rest_answer(info.OntologyTerm, ['json', 'xml', 'yaml'], ['ontology', 'relation', 'simple'], None, 'ontology/name/{0}'.format(urllib.parse.quote(str(name))), kwargs)
 
 
     def getAllAncestorsOfOntologyID(self, id, **kwargs):
@@ -690,7 +692,7 @@ Optional parameters:
 - ontology (String)
     Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
 """
-        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml', 'yaml'], ['ontology'], None, 'ontology/ancestors/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(info.OntologyTerm, ['json', 'xml', 'yaml'], ['ontology'], None, 'ontology/ancestors/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getAllDescendantsOfOntologyID(self, id, **kwargs):
@@ -714,7 +716,7 @@ Optional parameters:
 - zero_distance (Boolean)
     Return terms with a distance of 0
 """
-        return self.build_rest_answer(ensembl.info.OntologyTerm, ['json', 'xml'], ['ontology', 'subset', 'closest_term', 'zero_distance'], None, 'ontology/descendants/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(info.OntologyTerm, ['json', 'xml'], ['ontology', 'subset', 'closest_term', 'zero_distance'], None, 'ontology/descendants/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getOntologyAncestorChart(self, id, **kwargs):
@@ -732,7 +734,7 @@ Optional parameters:
 - ontology (String)
     Filter by ontology. Used to disambiguate terms which are shared between ontologies such as GO and EFO
 """
-        return self.build_rest_answer(ensembl.dict_wrapper(ensembl.info.OntologyEntry), ['json', 'xml'], ['ontology'], None, 'ontology/ancestors/chart/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(dict_wrapper(info.OntologyEntry), ['json', 'xml'], ['ontology'], None, 'ontology/ancestors/chart/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getAllFeaturesOnFeatureID(self, id, **kwargs):
@@ -766,7 +768,7 @@ Optional parameters:
 - biotype (String)
     The functional classification of the gene or transcript to fetch. Cannot be used in conjunction with logic_name when querying transcripts.
 """
-        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml', 'gff3', 'bed'], ['species', 'object_type', 'db_type', 'feature', 'species_set', 'logic_name', 'so_term', 'misc_set', 'biotype'], None, 'overlap/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(genome.feature_wrapper, ['json', 'xml', 'gff3', 'bed'], ['species', 'object_type', 'db_type', 'feature', 'species_set', 'logic_name', 'so_term', 'misc_set', 'biotype'], None, 'overlap/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getAllFeaturesOnRegion(self, species, region, **kwargs):
@@ -804,7 +806,7 @@ Optional parameters:
 - trim_downstream (Boolean)
     Do not return features which overlap the downstream end of the region.
 """
-        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml', 'gff3', 'bed'], ['db_type', 'feature', 'species_set', 'logic_name', 'so_term', 'cell_type', 'misc_set', 'biotype', 'trim_upstream', 'trim_downstream'], None, 'overlap/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
+        return self.build_rest_answer(genome.feature_wrapper, ['json', 'xml', 'gff3', 'bed'], ['db_type', 'feature', 'species_set', 'logic_name', 'so_term', 'cell_type', 'misc_set', 'biotype', 'trim_upstream', 'trim_downstream'], None, 'overlap/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
 
 
     def getAllFeaturesOnTranslation(self, id, **kwargs):
@@ -830,7 +832,7 @@ Optional parameters:
 - so_term (String)
     Sequence Ontology term to restrict the variations found. Its descendants are also included in the search.
 """
-        return self.build_rest_answer(ensembl.genome.feature_wrapper, ['json', 'xml'], ['species', 'db_type', 'feature', 'type', 'so_term'], None, 'overlap/translation/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(genome.feature_wrapper, ['json', 'xml'], ['species', 'db_type', 'feature', 'type', 'so_term'], None, 'overlap/translation/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getRegulatoryFeatureByID(self, species, id, **kwargs):
@@ -847,7 +849,7 @@ Required parameters:
     RegulatoryFeature stable ID
 
 """
-        return self.build_rest_answer(ensembl.funcgen.RegulatoryFeature, ['json', 'xml'], [], None, 'regulatory/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(funcgen.RegulatoryFeature, ['json', 'xml'], [], None, 'regulatory/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
 
 
     def getFeatureSequenceByID(self, id, **kwargs):
@@ -883,7 +885,7 @@ Optional parameters:
 - multiple_sequences (Boolean)
     Allow the service to return more than 1 sequence per identifier. This is useful when querying for a gene but using a type such as protein.
 """
-        return self.build_rest_answer(ensembl.genome.Sequence, ['fasta', 'json', 'text', 'yaml'], ['type', 'species', 'object_type', 'db_type', 'format', 'mask', 'mask_feature', 'expand_5prime', 'expand_3prime', 'multiple_sequences'], None, 'sequence/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(genome.Sequence, ['fasta', 'json', 'text', 'yaml'], ['type', 'species', 'object_type', 'db_type', 'format', 'mask', 'mask_feature', 'expand_5prime', 'expand_3prime', 'multiple_sequences'], None, 'sequence/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getSequenceOfRegion(self, species, region, **kwargs):
@@ -915,7 +917,7 @@ Optional parameters:
 - coord_system_version (String)
     Filter by coordinate system version
 """
-        return self.build_rest_answer(ensembl.genome.Sequence, ['fasta', 'json', 'text', 'yaml'], ['format', 'mask', 'mask_feature', 'expand_5prime', 'expand_3prime', 'coord_system', 'coord_system_version'], None, 'sequence/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
+        return self.build_rest_answer(genome.Sequence, ['fasta', 'json', 'text', 'yaml'], ['format', 'mask', 'mask_feature', 'expand_5prime', 'expand_3prime', 'coord_system', 'coord_system_version'], None, 'sequence/region/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region))), kwargs)
 
 
     def getTaxonomyEntryByID(self, id, **kwargs):
@@ -933,7 +935,7 @@ Optional parameters:
 - simple (Boolean)
     If set the API will avoid the fetching of parent and child terms
 """
-        return self.build_rest_answer(ensembl.compara.NCBITaxon, ['json', 'xml', 'yaml'], ['simple'], None, 'taxonomy/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(compara.NCBITaxon, ['json', 'xml', 'yaml'], ['simple'], None, 'taxonomy/id/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getTaxonomyClassificationByID(self, id, **kwargs):
@@ -948,7 +950,7 @@ Required parameters:
     A taxon identifier. Can be a NCBI taxon id or a name
 
 """
-        return self.build_rest_answer(ensembl.compara.NCBITaxon, ['json', 'xml', 'yaml'], [], None, 'taxonomy/classification/{0}'.format(urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(compara.NCBITaxon, ['json', 'xml', 'yaml'], [], None, 'taxonomy/classification/{0}'.format(urllib.parse.quote(str(id))), kwargs)
 
 
     def getTaxonomyEntryByName(self, name, **kwargs):
@@ -963,7 +965,7 @@ Required parameters:
     A non-scientific species name. Can include SQL wildcards
 
 """
-        return self.build_rest_answer(ensembl.compara.NCBITaxon, ['json', 'xml', 'yaml'], [], None, 'taxonomy/name/{0}'.format(urllib.parse.quote(str(name))), kwargs)
+        return self.build_rest_answer(compara.NCBITaxon, ['json', 'xml', 'yaml'], [], None, 'taxonomy/name/{0}'.format(urllib.parse.quote(str(name))), kwargs)
 
 
     def getVariationByID(self, species, id, **kwargs):
@@ -989,7 +991,7 @@ Optional parameters:
 - population_genotypes (Boolean(0,1))
     Include population genotype frequencies
 """
-        return self.build_rest_answer(ensembl.variation.Variation, ['json', 'xml'], ['genotypes', 'phenotypes', 'pops', 'population_genotypes'], None, 'variation/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(variation.Variation, ['json', 'xml'], ['genotypes', 'phenotypes', 'pops', 'population_genotypes'], None, 'variation/{0}/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
 
 
     def getVariantConsequencesByRegionAllele(self, species, region, allele, **kwargs):
@@ -1023,7 +1025,7 @@ Optional parameters:
 - xref_refseq (Boolean)
     Include aligned RefSeq mRNA identifiers for transcript. NB: theRefSeq and Ensembl transcripts aligned in this way MAY NOT, AND FREQUENTLY WILL NOT, match exactly in sequence, exon structure and protein product
 """
-        return self.build_rest_answer(ensembl.variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/region/{1}/{2}/'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region)), urllib.parse.quote(str(allele))), kwargs)
+        return self.build_rest_answer(variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/region/{1}/{2}/'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(region)), urllib.parse.quote(str(allele))), kwargs)
 
 
     def getVariantConsequencesByVariationID(self, species, id, **kwargs):
@@ -1055,7 +1057,7 @@ Optional parameters:
 - xref_refseq (Boolean)
     Include aligned RefSeq mRNA identifiers for transcript. NB: theRefSeq and Ensembl transcripts aligned in this way MAY NOT, AND FREQUENTLY WILL NOT, match exactly in sequence, exon structure and protein product
 """
-        return self.build_rest_answer(ensembl.variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/id/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
+        return self.build_rest_answer(variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/id/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(id))), kwargs)
 
 
     def getVariantConsequencesByHGVS(self, species, hgvs_notation, **kwargs):
@@ -1087,7 +1089,7 @@ Optional parameters:
 - xref_refseq (Boolean)
     Include aligned RefSeq mRNA identifiers for transcript. NB: theRefSeq and Ensembl transcripts aligned in this way MAY NOT, AND FREQUENTLY WILL NOT, match exactly in sequence, exon structure and protein product
 """
-        return self.build_rest_answer(ensembl.variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/hgvs/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(hgvs_notation))), kwargs)
+        return self.build_rest_answer(variation.VEPResult, ['json', 'xml'], ['hgvs', 'ccds', 'numbers', 'domains', 'canonical', 'protein', 'xref_refseq'], None, 'vep/{0}/hgvs/{1}'.format(urllib.parse.quote(str(species)), urllib.parse.quote(str(hgvs_notation))), kwargs)
 
 
 

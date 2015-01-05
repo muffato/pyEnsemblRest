@@ -7,8 +7,10 @@ import time
 import urllib
 import sys
 
+# This imports all the public packages (the ones that don't start with an underscore) and the content of __all__
+from . import *
+# So we need to add _pyrest_core
 from . import _pyrest_core
-import ensembl
 
 content_types = {
 #__CONTENT_TYPES__

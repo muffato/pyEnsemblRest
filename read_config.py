@@ -26,7 +26,7 @@ def replace_placeholder_in_template(filename, key, content_list, sep=''):
 
 def correct_namespace(n):
     mn = main_namespace + n if n.startswith('.') else n
-    return mn.replace('(.', '(' + main_namespace + '.')
+    return mn.replace('wrapper(', 'wrapper(' + main_namespace + '.')
 
 ## Generate all the modules with basic object definition
 
@@ -118,7 +118,7 @@ template_endpoint = '''
     def {0}(self, {1}, **kwargs):
         """{3}
 
-Return type: {4}
+Return type: {13}
 Valid formats: {6}
 HTTP endpoint: {7}
 
@@ -131,7 +131,7 @@ template_endpoint_no_args = '''
     def {0}(self, **kwargs):
         """{3}
 
-Return type: {4}
+Return type: {13}
 Valid formats: {6}
 HTTP endpoint: {7}
 
@@ -194,7 +194,7 @@ def get_code_for_endpoint(e):
         ", ".join(required_params),
         '/'.join(endpoint_url_segments),
         d['description'],
-        correct_namespace('.' + e.get('object')) if e.get('object') is not None else "None",
+        e.get('object') if e.get('object') is not None else "None",
         d['output'],
         ", ".join(d['output']),
         d['endpoint'],
@@ -203,6 +203,7 @@ def get_code_for_endpoint(e):
         optional_params,
         None if e.get('accessor') is None else '"%s"' % e.get('accessor'),
         ", ".join("urllib.parse.quote(str({0}))".format(_) for _ in required_params),
+        correct_namespace("." + e.get('object')) if e.get('object') is not None else "None",
     )
 
 

@@ -156,7 +156,7 @@
 		<endpoint id="ontology_name" name="getOntologyByName" object="info.OntologyTerm" />
 		<endpoint id="ontology_ancestors" name="getAllAncestorsOfOntologyID" object="info.OntologyTerm" />
 		<endpoint id="ontology_descendants" name="getAllDescendantsOfOntologyID" object="info.OntologyTerm" />
-		<endpoint id="ontology_ancestors_chart" name="getOntologyAncestorChart" object="dict_wrapper(.info.OntologyEntry)"/>
+		<endpoint id="ontology_ancestors_chart" name="getOntologyAncestorChart" object="dict_wrapper(info.OntologyEntry)"/>
 
 		<!-- overlap.conf -->
 		<endpoint id="overlap_id" name="getAllFeaturesOnFeatureID" object="genome.feature_wrapper" />
