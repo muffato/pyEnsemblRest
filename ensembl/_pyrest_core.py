@@ -18,7 +18,7 @@ def fset(x):
 class BaseObject(object):
 
     def __init__(self, adict, rest_server):
-        self.__set_new_field('server', rest_server, None)
+        self._server = rest_server
         for k, v in adict.items():
             new_class = None
             if (isinstance(v, dict)) or (isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict)):
