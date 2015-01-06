@@ -12,27 +12,6 @@ from . import *
 # So we need to add _pyrest_core
 from . import _pyrest_core
 
-__content_types = {
-"bed": "text/x-bed",
-"fasta": "text/x-fasta",
-"gff3": "text/x-gff3",
-"json": "application/json",
-"nh": "text/x-nh",
-"phyloxml": "text/x-phyloxml+xml",
-"xml": "text/xml",
-"yaml": "text/x-yaml",
-"text": "text/plain"
-}
-
-__return_codes = {
-200: ("OK", "Request was a success"),
-400: ("Bad Request", "Occurs during exceptional circumstances such as the service is unable to find an ID"),
-404: ("Not Found", "Indicates a badly formatted request. Check your URL"),
-429: ("Too Many Requests", "You have been rate-limited; wait and retry"),
-503: ("Service Unavailable", "The service is temporarily down; retry after a pause")
-}
-
-
 class RestServerException(Exception):
     """Used when the server returned a non-OK code"""
     pass
@@ -52,6 +31,27 @@ class RestServer:
     """
     RestServer is a class that knows how to communicate with the Ensembl REST servers.
     """
+
+
+    __content_types = {
+    "bed": "text/x-bed",
+"fasta": "text/x-fasta",
+"gff3": "text/x-gff3",
+"json": "application/json",
+"nh": "text/x-nh",
+"phyloxml": "text/x-phyloxml+xml",
+"xml": "text/xml",
+"yaml": "text/x-yaml",
+"text": "text/plain"
+    }
+
+    __return_codes = {
+    200: ("OK", "Request was a success"),
+400: ("Bad Request", "Occurs during exceptional circumstances such as the service is unable to find an ID"),
+404: ("Not Found", "Indicates a badly formatted request. Check your URL"),
+429: ("Too Many Requests", "You have been rate-limited; wait and retry"),
+503: ("Service Unavailable", "The service is temporarily down; retry after a pause")
+    }
 
     def __init__(self, server_url):
         """
@@ -84,10 +84,10 @@ class RestServer:
             else:
                 break
 
-        if resp.status not in __return_codes:
+        if resp.status not in self.__return_codes:
             raise UnknownResponseCodeException(resp.status, resp, content)
-        if __return_codes[resp.status][0] != "OK":
-            raise NotOKResponseCodeException(__return_codes[resp.status], resp.status, resp, content )
+        if self.__return_codes[resp.status][0] != "OK":
+            raise NotOKResponseCodeException(self.__return_codes[resp.status], resp.status, resp, content )
         self.last_headers = resp
 
         return content.decode('utf-8')
@@ -113,7 +113,7 @@ class RestServer:
                     pairs.append( (p,vv) )
             url = url + "?" + "&".join("%s=%s" % (p,urllib.parse.quote(str(v))) for (p,v) in pairs)
 
-        content = self.__get_json_answer(url, __content_types.get(format, __content_types['json']))
+        content = self.__get_json_answer(url, self.__content_types.get(format, self.__content_types['json']))
 
         #print "Format", format
         if format is not None:
