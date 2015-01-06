@@ -9,7 +9,7 @@ def dict_wrapper(new_type):
 # The constructor looks into <construction_rules> to use the correct type for each value
 
 def fget(x):
-    return lambda s : getattr(s, x)
+    return lambda s : s.__dict__.get(x, None)
 def fset(x):
     return lambda s, v: setattr(s, x, v)
 
@@ -35,7 +35,7 @@ class BaseObject(object):
             if k not in dir(self):
                 doc = "Undocumented attribute (guessed from the downloaded objects)"
                 print("'%s' (in %s) has no documentation" % (k, type(self)), file=sys.stderr)
-                setattr(type(self), k, property(fget(kk), fset(kk), None, doc))
+                setattr(type(self), k, property(fget(kk), None, None, doc))
             self.__dict__[kk] = vv
 
     # __repr__ defaults to something like '<ensembl.compara.NCBITaxon object at 0x7f85de15f668>'
@@ -44,7 +44,7 @@ class BaseObject(object):
     def __str__(self):
         return self.__class__.__module__ + '.' + self.__class__.__name__ + '(' + ', '.join(x[1:] + '=' + repr(y) for (x,y) in self.__dict__.items() if x != '_server') + ')'
 
-    server = property(fget('_server'), fset('_server'), None, 'REST server that was used to fetch this object')
+    server = property(fget('_server'), None, None, 'REST server that was used to fetch this object')
 
 def construct_object_from_json(obj, new_class, rest_server):
     if new_class is None:

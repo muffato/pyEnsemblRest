@@ -38,13 +38,14 @@ template_construction_rules = """
 %s._construction_rules = {%s}
 """
 
+    #{0} = property(lambda self : getattr(self, "_{0}"), lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
 template_property = """
-    #{0} = property(lambda self : getattr(self, "_{0}"), None, None, \"\"\"{1}\"\"\")
-    {0} = property(lambda self : getattr(self, "_{0}"), lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
+    {0} = property(_pyrest_core.fget("_{0}"), None, None, \"\"\"{1}\"\"\")
 """
+
+    #{0} = property({2}, lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
 template_property_with_special_getter = """
-    #{0} = property({2}, None, None, \"\"\"{1}\"\"\")
-    {0} = property({2}, lambda self, val : setattr(self, "_{0}", val), None, \"\"\"{1}\"\"\")
+    {0} = property({2}, None, None, \"\"\"{1}\"\"\")
 """
 
 
