@@ -1,5 +1,0 @@
-<map id="ensembl._pyrest_server.RestServerException" name="ensembl._pyrest_server.RestServerException">
-<area shape="rect" id="node3" href="$classensembl_1_1__pyrest__server_1_1NotOKResponseCodeException.html" title="Used when the server returned the response code of an error. " alt="" coords="399,5,588,46"/>
-<area shape="rect" id="node4" href="$classensembl_1_1__pyrest__server_1_1UnavailableFormatException.html" title="Used when the required output format is not available for this endpoint. " alt="" coords="377,70,610,111"/>
-<area shape="rect" id="node5" href="$classensembl_1_1__pyrest__server_1_1UnknownResponseCodeException.html" title="Used when the RestServer does not know the meaning of the HTTP response code returned by the server..." alt="" coords="383,135,603,177"/>
-</map>

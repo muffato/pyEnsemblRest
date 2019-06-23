@@ -1,7 +1,0 @@
-<map id="ensembl.genome.FeatureLikeBiotype" name="ensembl.genome.FeatureLikeBiotype">
-<area shape="rect" id="node6" href="$classensembl_1_1genome_1_1GeneFeature.html" title="ensembl.genome.GeneFeature" alt="" coords="5,419,204,445"/>
-<area shape="rect" id="node7" href="$classensembl_1_1genome_1_1TranscriptFeature.html" title="ensembl.genome.Transcript\lFeature" alt="" coords="230,411,412,453"/>
-<area shape="rect" id="node2" href="$classensembl_1_1genome_1_1FeatureWithID.html" title="ensembl.genome.FeatureWithID" alt="" coords="108,245,317,272"/>
-<area shape="rect" id="node3" href="$classensembl_1_1genome_1_1Feature.html" title="ensembl.genome.Feature" alt="" coords="129,171,297,197"/>
-<area shape="rect" id="node4" href="$classensembl_1_1__pyrest__core_1_1BaseObject.html" title="ensembl._pyrest_core.Base\lObject" alt="" coords="121,81,305,122"/>
-</map>
