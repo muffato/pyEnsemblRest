@@ -123,7 +123,7 @@ def test_VEP():
     print("region_allele", rs.getVariantConsequencesByHGVS('human', '9:g.22125504G>C'))
 
 
-test_VEP()
+#test_VEP()
 test_Overlap()
 test_Ontology()
 test_Mapping()
