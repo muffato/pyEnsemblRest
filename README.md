@@ -5,3 +5,5 @@ It requires a single configuration file (see config.xml) to describe the object 
 
 Doxygen documentation is available via rawgit: https://rawgit.com/muffato/pyEnsemblRest/master/doxygen/index.html
 Since most of the objects are dynamically created the doc is not that great :/
+
+This is a toy project ! I don't intend to develop it any further.
